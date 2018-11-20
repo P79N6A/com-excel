@@ -1,14 +1,24 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import MyComponent from '../src/index';
+import DataSheet from '../src/index';
 import '../src/react-datasheet.css';
+import SelectEditor from '../src/DataSelect'
+const data = [
+  [{ name: '',value:""}, { name: '',value:""},  { name: '', value:"",dataEditor: SelectEditor }, { name: '',value:"", dataEditor: SelectEditor }], 
+];
+const adddata = 
+  [{ name: '',value:""}, { name: '',value:""},   { name: '', value:"",select: "" }, { name: '', value:"",select: "" }];
 
-// import MyComponent from '../lib/index';
-
+const columns = [
+     { label: 'Style', width: '25%' },
+   { label: 'IBUs', width: '25%' },
+   { label: 'Color (SRM)', width: '25%' },
+    { label: 'Rating', width: '25%' }
+ ];
 const App = () => {
   return (
     <div>
-      <MyComponent />
+      <DataSheet adddata = {adddata} columns = {columns}  data = {data} />
     </div>
   );
 };

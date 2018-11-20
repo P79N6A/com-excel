@@ -252,7 +252,6 @@ export default class DataSheet extends PureComponent {
   }
 
   handleKey (e) {
-  
     if (e.isPropagationStopped && e.isPropagationStopped()) {
       return
     }

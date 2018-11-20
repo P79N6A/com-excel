@@ -102,15 +102,17 @@ class CustomRenderSheet extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      columns: [
-        { label: 'Style', width: '25%' },
-        { label: 'IBUs', width: '25%' },
-        { label: 'Color (SRM)', width: '25%' },
-        { label: 'Rating', width: '25%' }
-      ],
-      grid: [
-        [{ name: '',value:""}, { name: '',value:""}, { name: '',value:"" }, { name: '', dataEditor: SelectEditor }], 
-      ]
+      columns: this.props.columns,
+      // columns: [
+      //   { label: 'Style', width: '25%' },
+      //   { label: 'IBUs', width: '25%' },
+      //   { label: 'Color (SRM)', width: '25%' },
+      //   { label: 'Rating', width: '25%' }
+      // ],
+      grid: this.props.data
+      // grid: [
+      //   [{ name: '',value:""}, { name: '',value:""}, { name: '',value:"" }, { name: '', dataEditor: SelectEditor }], 
+      // ]
       // .map((a, i) => a.map((cell, j) => Object.assign(cell, {key: `${i}-${j}`})))
 
     }
@@ -132,7 +134,15 @@ class CustomRenderSheet extends PureComponent {
     })
     this.setState({ columns, grid })
   }
-
+  componentDidMount(){
+  this.state.grid.map((a, i) => a.map((cell, j) => {
+      if(Object.keys(cell).indexOf("dataEditor")>-1){
+        delete cell.dataEditor
+        Object.assign(cell, {select: ``})
+      }
+    }))
+    console.log(this.state.grid);
+  }
   handleRowDrop (from, to) {
     const grid = [ ...this.state.grid ]
     grid.splice(to, 0, ...grid.splice(from, 1))
@@ -152,19 +162,28 @@ class CustomRenderSheet extends PureComponent {
   //增加一行
   addrow (){
     const { grid } =  this.state;
-    const newData =  [
-    { value: ''}, 
-    { value: ''}, 
-    { value: ''},
-     { value: '', dataEditor: SelectEditor }];
+    // grid.map((a, i) => a.map((cell, j) => {
+    //   if(Object.keys(cell).indexOf("dataEditor")>-1){
+    //     delete cell.dataEditor
+    //     Object.assign(cell, {select: ``})
+    //   }
+    // }))
+    console.log("addrow",grid);
+ this.props.adddata.map(item =>{
+    if(Object.keys(item).indexOf("dataEditor")>-1){
+      delete item.dataEditor
+      Object.assign(item, {select: ``})
+    }
+  })
      this.setState({
-      grid:[...grid,newData]
+      grid:[...grid,this.props.adddata]
      })
   }
   //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
   checkDataType (i,j){
     const { grid } = this.state  
     const select = Object.keys(grid[i][j]).indexOf("dataEditor") >-1 ? true : false
+    console.log(Object.keys(grid[i][j]));
     if(select){
       grid[i][j] = {name:"",value:"",select:""}
     }
@@ -180,7 +199,6 @@ class CustomRenderSheet extends PureComponent {
   delete(i){
     const {grid} = this.state
     grid.splice(i,1)
-    console.log(grid);
   }
   renderSheet (props) {
     return <SheetRenderer columns={this.state.columns} onColumnDrop={this.handleColumnDrop} {...props} />//表格头部
