@@ -84,27 +84,10 @@ class CustomRendererSheet extends PureComponent {
         { label: 'Rating', width: '25%' }
       ],
       grid: [
-        [{ value: ''}, { dell: ''}, { test: '111', dataEditor: SelectEditor }, { nn: '111', dataEditor: SelectEditor }
-        // , {
-        //   component: (
-         
-        //       <div style = {{cursor:"pointer"}}> deleteitem</div>
-          
-        //   ),
-        //   forceComponent: true
-        // }
-      ],   [{ value: ''}, { dell: ''}, { aa: ''}, { nn: '111', dataEditor: SelectEditor }
-      // , {
-      //   component: (
-       
-      //       <div style = {{cursor:"pointer"}}> deleteitem</div>
-        
-      //   ),
-      //   forceComponent: true
-      // }
-    ],
-        
-      ].map((a, i) => a.map((cell, j) => Object.assign(cell, {key: `${i}-${j}`})))
+        [{ name: '',value:""}, { name: '',value:""}, { name: '',value:"" }, { nn: '111', dataEditor: SelectEditor }], 
+        [{ name: '',value:""}, { name: '',value:""}, { name: '',value:""}, { nn: '111', dataEditor: SelectEditor }] 
+      ]
+      // .map((a, i) => a.map((cell, j) => Object.assign(cell, {key: `${i}-${j}`})))
 
     }
     // console.log(this.state.grid,'grid')
@@ -114,9 +97,6 @@ class CustomRendererSheet extends PureComponent {
     this.handleChanges = this.handleChanges.bind(this)
     this.renderSheet = this.renderSheet.bind(this)
     this.renderRow = this.renderRow.bind(this)
-  }
-  componentDidMount(){
-  this.checkDataType()
   }
   handleColumnDrop (from, to) {
     const columns = [...this.state.columns]
@@ -156,17 +136,26 @@ class CustomRendererSheet extends PureComponent {
      this.setState({
       grid:[...grid,newData]
      })
-    //  this.checkDataType(grid)
   }
   //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
-  checkDataType (i,data){
-    console.log(i,data) 
-    const { grid } = this.state 
-  //  grid.forEach((items, i) => items.forEach((item, j) => {
-  //   if(item.dataEditor !== undefined){
-  //   grid[i].splice(j,1,{nn:"",sel:""})
-  //   }
-  // }))
+  checkDataType (i,j){
+    console.log(i,j) 
+    const { grid } = this.state  
+    const select = Object.keys(grid[i][j]).indexOf("dataEditor") === 1 ? true : false
+    if(select){
+      console.log(grid[i][j]);
+      grid[i][j] = {name:"",value:""}
+    }
+  }
+  //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
+  checkDataTypeSelect (i,j){
+    console.log(i,j) 
+    const { grid } = this.state  
+    const select = Object.keys(grid[i][j]).indexOf("dataEditor") === 1 ? true : false
+    if(select){
+      console.log(grid[i][j]);
+      grid[i][j] = {name:"",value:""}
+    }
   }
   delete(i){
     const {grid} = this.state

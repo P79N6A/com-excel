@@ -133,7 +133,7 @@ export default class DataSheet extends PureComponent {
     }
   }
   pageClick (e) {
-    //  console.log("pageClick",this.props.data)
+     console.log("pageClick",this.props.data)
     const element = this.dgDom
     if (!element.contains(e.target)) {
       this.setState(this.defaultState)
@@ -429,7 +429,7 @@ export default class DataSheet extends PureComponent {
     this.timer = setTimeout(() => {
       if (!this.prevent) {
        console.log("click");
-       this.props.checktype(i,this.props.data)
+       this.props.checktype(i,j)
       }
       this.prevent = false;
     }, this.delay);
