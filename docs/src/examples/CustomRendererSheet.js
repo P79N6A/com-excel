@@ -1,14 +1,8 @@
 import React, { PureComponent } from 'react'
 import { DragDropContextProvider } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
-import Select from 'react-select'
-
-// import DataSheet from '../lib'
-
+import SelectEditor from '../../src/src/DataSelect'
 import DataSheet from '../src/index'
-
-import {ENTER_KEY, TAB_KEY} from '../lib/keys'
-
 import {
   colDragSource, colDropTarget,
   rowDragSource, rowDropTarget
@@ -48,110 +42,22 @@ class SheetRenderer extends PureComponent {
 
 const RowRenderer = rowDropTarget(rowDragSource((props) => {
   const { isOver, children, connectDropTarget, connectDragPreview, connectDragSource } = props;
-    //   contextTypes = {
-    // color: PropTypes.string,
-    //   }
-    // propTypes = {
-    // value: PropTypes.string,
-    //     }
-
-
-  // console.log("RowRenderer",props)
   const className = isOver ? 'drop-target' : ''
   return connectDropTarget(connectDragPreview(
     <tr className={className}>
       { connectDragSource(<td className='cell read-only row-handle' key='$$actionCell' />)}
-      { children }<span 
+      { children }{props.length > 1 ?<span 
        onClick = {(event) =>{
-         console.log("delete")
-        event.stopPropagation();
+      event.stopPropagation();
       props.delete(props.rowIndex) 
       props.testdelete()
       }} 
       className = {`span${props.rowIndex}`}
-      style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}>delete</span>
+      style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}>delete</span>: null}
     </tr>
   ))
 }))
 
-class SelectEditor extends PureComponent {
-  constructor (props) {
-    super(props)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleKeyDown = this.handleKeyDown.bind(this)
-    this.state = {}
-  }
-
-  handleChange (opt) {
-    const {onCommit, onRevert} = this.props
-    if (!opt) {
-      return onRevert()
-    }
-    const { e } = this.state
-    onCommit(opt.value, e)
-    console.log('COMMITTED', opt.value)
-  }
-
-  handleKeyDown (e) {
-    // record last key pressed so we can handle enter
-    if (e.which === ENTER_KEY || e.which === TAB_KEY) {
-      e.persist()
-      this.setState({ e })
-    } else {
-      this.setState({ e: null })
-    }
-  }
-
-  render () {
-    return (
-      <Select
-        autoFocus
-        openOnFocus
-        closeOnSelect
-        value={this.props.value}
-        onChange={this.handleChange}
-        onInputKeyDown={this.handleKeyDown}
-        options={[
-          {label: '1', value: 1},
-          {label: '2', value: 2},
-          {label: '3', value: 3},
-          {label: '4', value: 4},
-          {label: '5', value: 5}
-        ]}
-      />
-    )
-  }
-}
-class RangeEditor extends PureComponent {
-  constructor (props) {
-    super(props)
-    this.handleChange = this.handleChange.bind(this)
-  }
-
-  componentDidMount () {
-    this._input.focus()
-  }
-
-  handleChange (e) {
-    this.props.onChange(e.target.value)
-  }
-
-  render () {
-    const {value, onKeyDown} = this.props
-    return (
-      <input
-        ref={input => { this._input = input }}
-        type='range'
-        className='data-editor'
-        value={value}
-        min='1'
-        max='5'
-        onChange={this.handleChange}
-        onKeyDown={onKeyDown}
-      />
-    )
-  }
-}
 
 const FillViewer = props => {
   const { value } = props
@@ -178,7 +84,7 @@ class CustomRendererSheet extends PureComponent {
         { label: 'Rating', width: '25%' }
       ],
       grid: [
-        [{ value: ''}, { dell: ''}, { aa: ''}, { nn: '111', dataEditor: SelectEditor }
+        [{ value: ''}, { dell: ''}, { test: '111', dataEditor: SelectEditor }, { nn: '111', dataEditor: SelectEditor }
         // , {
         //   component: (
          
@@ -187,20 +93,31 @@ class CustomRendererSheet extends PureComponent {
         //   ),
         //   forceComponent: true
         // }
-      ],
+      ],   [{ value: ''}, { dell: ''}, { aa: ''}, { nn: '111', dataEditor: SelectEditor }
+      // , {
+      //   component: (
+       
+      //       <div style = {{cursor:"pointer"}}> deleteitem</div>
+        
+      //   ),
+      //   forceComponent: true
+      // }
+    ],
         
       ].map((a, i) => a.map((cell, j) => Object.assign(cell, {key: `${i}-${j}`})))
 
     }
     // console.log(this.state.grid,'grid')
-
+    
     this.handleColumnDrop = this.handleColumnDrop.bind(this)
     this.handleRowDrop = this.handleRowDrop.bind(this)
     this.handleChanges = this.handleChanges.bind(this)
     this.renderSheet = this.renderSheet.bind(this)
     this.renderRow = this.renderRow.bind(this)
   }
-
+  componentDidMount(){
+  this.checkDataType()
+  }
   handleColumnDrop (from, to) {
     const columns = [...this.state.columns]
     columns.splice(to, 0, ...columns.splice(from, 1))
@@ -219,9 +136,7 @@ class CustomRendererSheet extends PureComponent {
   }
 
   handleChanges (changes) {
-
-    console.log('changes', changes);
-
+    console.log('handleChanges', changes);
     const grid = this.state.grid.map(row => [...row])
     changes.forEach(({cell, row, col, value}) => {
       if (grid[row] && grid[row][col]) {
@@ -231,6 +146,28 @@ class CustomRendererSheet extends PureComponent {
     this.setState({grid})
   }
   //增加一行
+  addrow (){
+    const { grid } =  this.state;
+    const newData =  [
+    { value: ''}, 
+    { value: ''}, 
+    { value: ''},
+     { value: '', dataEditor: SelectEditor }];
+     this.setState({
+      grid:[...grid,newData]
+     })
+    //  this.checkDataType(grid)
+  }
+  //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
+  checkDataType (i,data){
+    console.log(i,data) 
+    const { grid } = this.state 
+  //  grid.forEach((items, i) => items.forEach((item, j) => {
+  //   if(item.dataEditor !== undefined){
+  //   grid[i].splice(j,1,{nn:"",sel:""})
+  //   }
+  // }))
+  }
   delete(i){
     const {grid} = this.state
     grid.splice(i,1)
@@ -242,7 +179,7 @@ class CustomRendererSheet extends PureComponent {
 
   renderRow (props) {
     const {row, cells, ...rest} = props
-    return <RowRenderer  delete = {this.delete.bind(this)}  onRowDrop={this.handleRowDrop}  rowIndex={row} {...rest} />
+    return <RowRenderer length = {this.state.grid.length}  delete = {this.delete.bind(this)}  onRowDrop={this.handleRowDrop}  rowIndex={row} {...rest} />
   }
 
   render () {
@@ -251,7 +188,8 @@ class CustomRendererSheet extends PureComponent {
       <DragDropContextProvider backend={HTML5Backend}>
         <DataSheet
           data={grid}
-          // addrow = {this.addrow.bind(this)}
+          addrow = {this.addrow.bind(this)}
+          checktype = {this.checkDataType.bind(this)}
           valueRenderer={(cell) => cell.value}
           sheetRenderer={this.renderSheet}
           rowRenderer={this.renderRow}

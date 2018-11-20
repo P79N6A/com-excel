@@ -7,8 +7,8 @@ export default class App extends React.Component {
   render () {
     return (
       <div>
-        <div className={'header'}>
-          <h1>React datasheet</h1>
+        {/* <div className={'header'}>
+          { <h1>React datasheet</h1>
           <h4>Simple and highly customizable excel-like spreadsheet</h4>
           <pre>npm install react-datasheet --save</pre>
           <a className={'github-link'} href="https://github.com/nadbm/react-datasheet"><span className="hidden-xs"> View on GitHub </span><span className="octicon octicon-mark-github" aria-hidden="true"></span></a>
@@ -61,11 +61,11 @@ export default class App extends React.Component {
           </small>
           <small>
             The "Rating" column also shows how to specify custom cell editing and viewing components.
-          </small>
+          </small>  */}
           <div className={'sheet-container'}>
             <CustomRendererSheet />
           </div>
-          <div className={'divider'} />
+          {/* <div className={'divider'} />
           <h3 style={{color: '#e63946'}}>Sheet with custom structure</h3>
           <small>
             Ever wish you could <a href="https://github.com/nadbm/react-datasheet/issues/27">customize how data is displayed</a>,
@@ -92,7 +92,7 @@ export default class App extends React.Component {
           <div className={'footer'} >
             Check out the GitHub project at <a href='https://github.com/nadbm/react-datasheet'>react-datasheet</a>
           </div>
-        </div>
+        </div> */}
       </div>
     )
   }
