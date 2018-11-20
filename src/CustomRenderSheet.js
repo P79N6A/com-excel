@@ -78,7 +78,7 @@ const RowRenderer = (props) => {
     props.testdelete()
   }} 
   className = {`span${props.rowIndex}`}
-  style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}>delete</span> : null}
+  style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}><span className = "iconfont icon-shanchu"></span></span> : null}
   </td>
 </tr>
 }
