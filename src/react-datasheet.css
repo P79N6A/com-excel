@@ -33,7 +33,7 @@ span.data-grid-container, span.data-grid-container:focus {
 }
 
 .data-grid-container .data-grid .cell.read-only {
-  background: whitesmoke;
+  background: #F3F6F8;
   color: #999;
   text-align: center;
 }

@@ -4,6 +4,7 @@ import Row from './Row';
 import Cell from './Cell';
 import DataEditor from './DataEditor';
 import ValueViewer from './ValueViewer';
+import './index.less'
 import {
   renderValue,
   renderData

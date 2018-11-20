@@ -1,30 +1,37 @@
-import React, { PureComponent, Children } from 'react'
-import PropTypes from 'prop-types'
-import Sheet from './Sheet'
-import Row from './Row'
-import Cell from './Cell'
-import DataCell from './DataCell'
-import DataEditor from './DataEditor'
-import ValueViewer from './ValueViewer'
-import { TAB_KEY, ENTER_KEY, DELETE_KEY, ESCAPE_KEY, BACKSPACE_KEY,
-  LEFT_KEY, UP_KEY, DOWN_KEY, RIGHT_KEY } from './keys'
+import React, { PureComponent, Children } from 'react';
+import PropTypes from 'prop-types';
+import Sheet from './Sheet';
+import Row from './Row';
+import Cell from './Cell';
+import DataCell from './DataCell';
+import DataEditor from './DataEditor';
+import ValueViewer from './ValueViewer';
+import {
+	TAB_KEY,
+	ENTER_KEY,
+	DELETE_KEY,
+	ESCAPE_KEY,
+	BACKSPACE_KEY,
+	LEFT_KEY,
+	UP_KEY,
+	DOWN_KEY,
+	RIGHT_KEY
+} from './keys';
 
-const isEmpty = (obj) => Object.keys(obj).length === 0 //判断对象的长度
+const isEmpty = (obj) => Object.keys(obj).length === 0; //判断对象的长度
 
 const range = (start, end) => {
-  const array = []
-  const inc = (end - start > 0)
-  for (let i = start; inc ? (i <= end) : (i >= end); inc ? i++ : i--) {
-    inc ? array.push(i) : array.unshift(i)
-  }
-  return array
-}
+	const array = [];
+	const inc = end - start > 0;
+	for (let i = start; inc ? i <= end : i >= end; inc ? i++ : i--) {
+		inc ? array.push(i) : array.unshift(i);
+	}
+	return array;
+};
 
 const defaultParsePaste = (str) => {
-  return str.split(/\r\n|\n|\r/)
-    .map((row) => row.split('\t'))
-}
-
+	return str.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
+};
 
 export default class DataSheet extends PureComponent {
   constructor (props) {
@@ -560,40 +567,42 @@ export default class DataSheet extends PureComponent {
     )
   }
 }
+
+
 //类型检查
 DataSheet.propTypes = {
-  data: PropTypes.array.isRequired,
-  className: PropTypes.string,
-  overflow: PropTypes.oneOf(['wrap', 'nowrap', 'clip']),
-  onChange: PropTypes.func,
-  onCellsChanged: PropTypes.func,
-  onContextMenu: PropTypes.func,
-  onSelect: PropTypes.func,
-  selected: PropTypes.shape({
-    start: PropTypes.shape({
-      i: PropTypes.number,
-      j: PropTypes.number
-    }),
-    end: PropTypes.shape({
-      i: PropTypes.number,
-      j: PropTypes.number
-    })
-  }),
-  valueRenderer: PropTypes.func.isRequired,
-  dataRenderer: PropTypes.func,
-  sheetRenderer: PropTypes.func.isRequired,
-  rowRenderer: PropTypes.func.isRequired,
-  cellRenderer: PropTypes.func.isRequired,
-  valueViewer: PropTypes.func,
-  dataEditor: PropTypes.func,
-  parsePaste: PropTypes.func,
-  attributesRenderer: PropTypes.func,
-  keyFn: PropTypes.func
-}
+	data: PropTypes.array.isRequired,
+	className: PropTypes.string,
+	overflow: PropTypes.oneOf([ 'wrap', 'nowrap', 'clip' ]),
+	onChange: PropTypes.func,
+	onCellsChanged: PropTypes.func,
+	onContextMenu: PropTypes.func,
+	onSelect: PropTypes.func,
+	selected: PropTypes.shape({
+		start: PropTypes.shape({
+			i: PropTypes.number,
+			j: PropTypes.number
+		}),
+		end: PropTypes.shape({
+			i: PropTypes.number,
+			j: PropTypes.number
+		})
+	}),
+	valueRenderer: PropTypes.func.isRequired,
+	dataRenderer: PropTypes.func,
+	sheetRenderer: PropTypes.func.isRequired,
+	rowRenderer: PropTypes.func.isRequired,
+	cellRenderer: PropTypes.func.isRequired,
+	valueViewer: PropTypes.func,
+	dataEditor: PropTypes.func,
+	parsePaste: PropTypes.func,
+	attributesRenderer: PropTypes.func,
+	keyFn: PropTypes.func
+};
 DataSheet.defaultProps = {
-  sheetRenderer: Sheet,
-  rowRenderer: Row,
-  cellRenderer: Cell,
-  valueViewer: ValueViewer,
-  dataEditor: DataEditor
-}
+	sheetRenderer: Sheet,
+	rowRenderer: Row,
+	cellRenderer: Cell,
+	valueViewer: ValueViewer,
+	dataEditor: DataEditor
+};

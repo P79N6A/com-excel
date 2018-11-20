@@ -1,122 +1,82 @@
-import React, { PureComponent } from 'react'
-// import { DragDropContextProvider } from 'react-dnd'
-// import HTML5Backend from 'react-dnd-html5-backend'
-import SelectEditor from './DataSelect'
-import DataSheet from './DataSheet'
-// import {
-//   colDragSource, colDropTarget,
-//   rowDragSource, rowDropTarget
-// } from './drag-drop.js'
-
-// const Header = colDropTarget(colDragSource((props) => {
-//   const { col, connectDragSource, connectDropTarget, isOver } = props
-//   const className = isOver ? 'cell read-only drop-target' : 'cell read-only'
-//   return connectDropTarget(
-//     connectDragSource(
-//       <th className={className} style={{ width: col.width }}>{col.label}</th>
-//     ))
-// }))
+import React, { PureComponent } from 'react';
+import SelectEditor from './DataSelect';
+import DataSheet from './DataSheet';
 
 const Header = (props) => {
-  const { col, isOver } = props;
-  const className = isOver ? 'cell read-only drop-target' : 'cell read-only';  
-  return <th className={className} style={{ width: col.width }}>{col.label}</th>;
-}
+	const { col, isOver } = props;
+	const className = isOver ? 'cell read-only drop-target' : 'cell read-only';
+	return (
+		<th className={className} style={{ width: col.width }}>
+			{col.label}
+		</th>
+	);
+};
 
 class SheetRenderer extends PureComponent {
-  render () {
-    const { className, columns, onColumnDrop } = this.props
-    return (
-      <table className={className}>
-        <thead>
-          <tr>
-            <th className='cell read-only row-handle' key='$$actionCell' />
-            {
-              columns.map((col, index) => (
-                <Header key={col.label} col={col} columnIndex={index} onColumnDrop={onColumnDrop} />
-              ))
-            }
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.children}
-        </tbody>
-      </table>
-    )
-  }
+	render() {
+		const { className, columns, onColumnDrop } = this.props;
+		return (
+			<table className={className}>
+				<thead>
+					<tr>
+						{columns.map((col, index) => (
+							<Header key={col.label} col={col} columnIndex={index} onColumnDrop={onColumnDrop} />
+						))}
+					</tr>
+				</thead>
+				<tbody>{this.props.children}</tbody>
+			</table>
+		);
+	}
 }
-
-// const RowRenderer = rowDropTarget(rowDragSource((props) => {
-//   const { isOver, children, connectDropTarget, connectDragPreview, connectDragSource } = props;
-//   const className = isOver ? 'drop-target' : ''
-//   return connectDropTarget(connectDragPreview(
-//     <tr className={className}>
-//       { connectDragSource(<td className='cell read-only row-handle' key='$$actionCell' />)}
-//       { children }{props.length > 1 ?<span 
-//        onClick = {(event) =>{
-//       event.stopPropagation();
-//       props.delete(props.rowIndex) 
-//       props.testdelete()
-//       }} 
-//       className = {`span${props.rowIndex}`}
-//       style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}>delete</span>: null}
-//     </tr>
-//   ))
-// }))
 
 const RowRenderer = (props) => {
-  const { isOver, children } = props;
-  const className = isOver ? 'drop-target' : ''
-  return  <tr className={className}>
-  <td className='cell read-only row-handle' key='$$actionCell' />
-  { children }
-  <td>
-  {props.length > 1 ? <span 
-   onClick = {(event) =>{
-    event.stopPropagation();
-    props.delete(props.rowIndex) 
-    props.testdelete()
-  }} 
-  className = {`span${props.rowIndex}`}
-  style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}><span className = "iconfont icon-shanchu"></span></span> : null}
-  </td>
-</tr>
-}
+	const { isOver, children } = props;
+	const className = isOver ? 'drop-target' : '';
+	return (
+		<tr className={className}>
+			{children}
+			{props.length > 1 ? (
+        <td className="delete-td">
+				<span
+					onClick={(event) => {
+						event.stopPropagation();
+						props.delete(props.rowIndex);
+						props.testdelete();
+					}}
+					className={`span${props.rowIndex} iconfont icon-shanchu icon-delete`}
+					style={{
+						display: props.spanIndex === props.rowIndex ? 'block' : 'none',
+						fontSize: 14,
+						cursor: 'pointer',
+						transform: 'translate(5px, 8px)'
+					}}
+				/>
+        </td>
+			) : null}
+		</tr>
+	);
+};
 
-
-const FillViewer = props => {
-  const { value } = props
-  return (
-    <div style={{width: '100%'}}>
-      {[1, 2, 3, 4, 5].map(v => {
-        const backgroundColor = v > value ? 'transparent' : '#007eff'
-        return (
-          <div key={v} style={{float: 'left', width: '20%', height: '17px', backgroundColor}} />
-        )
-      })}
-    </div>
-  )
-}
+const FillViewer = (props) => {
+	const { value } = props;
+	return (
+		<div style={{ width: '100%' }}>
+			{[ 1, 2, 3, 4, 5 ].map((v) => {
+				const backgroundColor = v > value ? 'transparent' : '#007eff';
+				return <div key={v} style={{ float: 'left', width: '20%', height: '17px', backgroundColor }} />;
+			})}
+		</div>
+	);
+};
 
 class CustomRenderSheet extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
       columns: this.props.columns,
-      // columns: [
-      //   { label: 'Style', width: '25%' },
-      //   { label: 'IBUs', width: '25%' },
-      //   { label: 'Color (SRM)', width: '25%' },
-      //   { label: 'Rating', width: '25%' }
-      // ],
       grid: this.props.data
-      // grid: [
-      //   [{ name: '',value:""}, { name: '',value:""}, { name: '',value:"" }, { name: '', dataEditor: SelectEditor }], 
-      // ]
-      // .map((a, i) => a.map((cell, j) => Object.assign(cell, {key: `${i}-${j}`})))
-
     }
-    // console.log(this.state.grid,'grid')
     
     this.handleColumnDrop = this.handleColumnDrop.bind(this)
     this.handleRowDrop = this.handleRowDrop.bind(this)
@@ -204,31 +164,35 @@ class CustomRenderSheet extends PureComponent {
     return <SheetRenderer columns={this.state.columns} onColumnDrop={this.handleColumnDrop} {...props} />//表格头部
   }
 
-  renderRow (props) {
-    const {row, cells, ...rest} = props
-    return <RowRenderer length = {this.state.grid.length}  delete = {this.delete.bind(this)}  onRowDrop={this.handleRowDrop}  rowIndex={row} {...rest} />
-  }
+	renderRow(props) {
+		const { row, cells, ...rest } = props;
+		return (
+			<RowRenderer
+				length={this.state.grid.length}
+				delete={this.delete.bind(this)}
+				onRowDrop={this.handleRowDrop}
+				rowIndex={row}
+				{...rest}
+			/>
+		);
+	}
 
-  render () {
-    const {grid,columns} = this.state
-    return (
-      // <DragDropContextProvider backend={HTML5Backend}>
-        <DataSheet
-          data={grid}
-          addrow = {this.addrow.bind(this)}
-          checktype = {this.checkDataType.bind(this)}
-          checkSelect = {this.checkDataTypeSelect.bind(this)}
-          valueRenderer={(cell) => cell.value}
-          sheetRenderer={this.renderSheet}
-          rowRenderer={this.renderRow}
-          onCellsChanged={this.handleChanges}
-          columnslenth = {columns.length}
-        />
-      // </DragDropContextProvider>
-    
-     
-    )
-  }
+	render() {
+		const { grid, columns } = this.state;
+		return (
+			<DataSheet
+				data={grid}
+				addrow={this.addrow.bind(this)}
+				checktype={this.checkDataType.bind(this)}
+				checkSelect={this.checkDataTypeSelect.bind(this)}
+				valueRenderer={(cell) => cell.value}
+				sheetRenderer={this.renderSheet}
+				rowRenderer={this.renderRow}
+				onCellsChanged={this.handleChanges}
+				columnslenth={columns.length}
+			/>
+		);
+	}
 }
 
-export default CustomRenderSheet
+export default CustomRenderSheet;

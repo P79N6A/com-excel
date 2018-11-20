@@ -4,16 +4,16 @@ import DataSheet from '../src/index';
 import '../src/react-datasheet.css';
 import SelectEditor from '../src/DataSelect'
 const data = [
-  [{ name: '',value:""}, { name: '',value:""},  { name: '', value:"",dataEditor: SelectEditor }, { name: '',value:"", dataEditor: SelectEditor }], 
+  [{ name: '',value:"a"}, { name: '',value:"b"},  { name: '', value:"c",dataEditor: SelectEditor }, { name: '',value:"d", dataEditor: SelectEditor }], 
 ];
 const adddata = 
-  [{ name: '',value:""}, { name: '',value:""},   { name: '', value:"",select: "" }, { name: '', value:"",select: "" }];
+  [{ name: '',value:"default1"}, { name: '',value:"default2"},   { name: '', value:"",select: "" }, { name: '', value:"default5",select: "" }];
 
 const columns = [
-     { label: 'Style', width: '25%' },
-   { label: 'IBUs', width: '25%' },
-   { label: 'Color (SRM)', width: '25%' },
-    { label: 'Rating', width: '25%' }
+     { label: 'col1', width: '25%' },
+   { label: 'col2', width: '25%' },
+   { label: 'col3 (SRM)', width: '25%' },
+    { label: 'col4', width: '25%' }
  ];
 const App = () => {
   return (
