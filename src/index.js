@@ -1,12 +1,16 @@
-import DataSheet from './DataSheet'
-import Sheet from './Sheet'
-import Row from './Row'
-import Cell from './Cell'
-import DataEditor from './DataEditor'
-import ValueViewer from './ValueViewer'
-import { renderValue, renderData } from './renderHelpers'
+import DataSheet from './DataSheet';
+import Sheet from './Sheet';
+import Row from './Row';
+import Cell from './Cell';
+import DataEditor from './DataEditor';
+import ValueViewer from './ValueViewer';
+import {
+  renderValue,
+  renderData
+} from './renderHelpers';
+import CustomRenderSheet from './CustomRenderSheet';
 
-export default DataSheet
+export default CustomRenderSheet;
 
 export {
   Sheet,
@@ -15,5 +19,6 @@ export {
   DataEditor,
   ValueViewer,
   renderValue,
-  renderData
+  renderData,
+  DataSheet
 }

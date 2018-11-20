@@ -1,21 +1,27 @@
 import React, { PureComponent } from 'react'
-import { DragDropContextProvider } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
-import SelectEditor from '../../src/src/DataSelect'
-import DataSheet from '../src/index'
-import {
-  colDragSource, colDropTarget,
-  rowDragSource, rowDropTarget
-} from './drag-drop.js'
+// import { DragDropContextProvider } from 'react-dnd'
+// import HTML5Backend from 'react-dnd-html5-backend'
+import SelectEditor from './DataSelect'
+import DataSheet from './DataSheet'
+// import {
+//   colDragSource, colDropTarget,
+//   rowDragSource, rowDropTarget
+// } from './drag-drop.js'
 
-const Header = colDropTarget(colDragSource((props) => {
-  const { col, connectDragSource, connectDropTarget, isOver } = props
-  const className = isOver ? 'cell read-only drop-target' : 'cell read-only'
-  return connectDropTarget(
-    connectDragSource(
-      <th className={className} style={{ width: col.width }}>{col.label}</th>
-    ))
-}))
+// const Header = colDropTarget(colDragSource((props) => {
+//   const { col, connectDragSource, connectDropTarget, isOver } = props
+//   const className = isOver ? 'cell read-only drop-target' : 'cell read-only'
+//   return connectDropTarget(
+//     connectDragSource(
+//       <th className={className} style={{ width: col.width }}>{col.label}</th>
+//     ))
+// }))
+
+const Header = (props) => {
+  const { col, isOver } = props;
+  const className = isOver ? 'cell read-only drop-target' : 'cell read-only';  
+  return <th className={className} style={{ width: col.width }}>{col.label}</th>;
+}
 
 class SheetRenderer extends PureComponent {
   render () {
@@ -40,23 +46,42 @@ class SheetRenderer extends PureComponent {
   }
 }
 
-const RowRenderer = rowDropTarget(rowDragSource((props) => {
-  const { isOver, children, connectDropTarget, connectDragPreview, connectDragSource } = props;
+// const RowRenderer = rowDropTarget(rowDragSource((props) => {
+//   const { isOver, children, connectDropTarget, connectDragPreview, connectDragSource } = props;
+//   const className = isOver ? 'drop-target' : ''
+//   return connectDropTarget(connectDragPreview(
+//     <tr className={className}>
+//       { connectDragSource(<td className='cell read-only row-handle' key='$$actionCell' />)}
+//       { children }{props.length > 1 ?<span 
+//        onClick = {(event) =>{
+//       event.stopPropagation();
+//       props.delete(props.rowIndex) 
+//       props.testdelete()
+//       }} 
+//       className = {`span${props.rowIndex}`}
+//       style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}>delete</span>: null}
+//     </tr>
+//   ))
+// }))
+
+const RowRenderer = (props) => {
+  const { isOver, children } = props;
   const className = isOver ? 'drop-target' : ''
-  return connectDropTarget(connectDragPreview(
-    <tr className={className}>
-      { connectDragSource(<td className='cell read-only row-handle' key='$$actionCell' />)}
-      { children }{props.length > 1 ?<span 
-       onClick = {(event) =>{
-      event.stopPropagation();
-      props.delete(props.rowIndex) 
-      props.testdelete()
-      }} 
-      className = {`span${props.rowIndex}`}
-      style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}>delete</span>: null}
-    </tr>
-  ))
-}))
+  return  <tr className={className}>
+  <td className='cell read-only row-handle' key='$$actionCell' />
+  { children }
+  <td>
+  {props.length > 1 ? <span 
+   onClick = {(event) =>{
+    event.stopPropagation();
+    props.delete(props.rowIndex) 
+    props.testdelete()
+  }} 
+  className = {`span${props.rowIndex}`}
+  style = {{display: props.spanIndex === props.rowIndex ? "block" :"none",fontSize:12,cursor:"pointer"}}>delete</span> : null}
+  </td>
+</tr>
+}
 
 
 const FillViewer = props => {
@@ -73,7 +98,7 @@ const FillViewer = props => {
   )
 }
 
-class CustomRendererSheet extends PureComponent {
+class CustomRenderSheet extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -174,7 +199,7 @@ class CustomRendererSheet extends PureComponent {
   render () {
     const {grid,columns} = this.state
     return (
-      <DragDropContextProvider backend={HTML5Backend}>
+      // <DragDropContextProvider backend={HTML5Backend}>
         <DataSheet
           data={grid}
           addrow = {this.addrow.bind(this)}
@@ -185,11 +210,11 @@ class CustomRendererSheet extends PureComponent {
           onCellsChanged={this.handleChanges}
           columnslenth = {columns.length}
         />
-      </DragDropContextProvider>
+      // </DragDropContextProvider>
     
      
     )
   }
 }
 
-export default CustomRendererSheet
+export default CustomRenderSheet

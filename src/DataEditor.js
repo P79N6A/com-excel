@@ -11,6 +11,9 @@ export default class DataEditor extends PureComponent {
 
   componentDidMount () {
     this._input.focus()
+    this._input.onblur = (e) =>{
+      // console.log(e,"blur")
+    }
   }
 
   handleChange (e) {

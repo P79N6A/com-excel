@@ -34,13 +34,14 @@ export default class DataCell extends PureComponent {
     this.handleMouseOver = this.handleMouseOver.bind(this)
     this.handleContextMenu = this.handleContextMenu.bind(this)
     this.handleDoubleClick = this.handleDoubleClick.bind(this)
+    this.handleClick = this.handleClick.bind(this)
 
     this.state = {updated: false, reverting: false, value: '', committing: false}
   }
 
   componentWillReceiveProps (nextProps) {
     if (initialValue(nextProps) !== initialValue(this.props)) {
-      this.setState({updated: true})
+      // this.setState({updated: true})
       this.timeout = setTimeout(() => this.setState({updated: false}), 700)
     }
     if (nextProps.editing === true && this.props.editing === false) {
@@ -88,6 +89,7 @@ export default class DataCell extends PureComponent {
 
   handleMouseDown (e) {
     const {row, col, onMouseDown, cell} = this.props
+    // console.log("datacell",this.props);
     if (!cell.disableEvents) {
       onMouseDown(row, col)
     }
@@ -101,9 +103,15 @@ export default class DataCell extends PureComponent {
   }
 
   handleDoubleClick (e) {
-    const {row, col, onDoubleClick, cell} = this.props
+    const {row, col, onDoubleClick,onClick, cell} = this.props
     if (!cell.disableEvents) {
       onDoubleClick(row, col)
+    }
+  }
+  handleClick (e) {
+    const {row, col, onClick, cell} = this.props
+    if (!cell.disableEvents) {
+      onClick(row, col)
     }
   }
 
@@ -115,15 +123,16 @@ export default class DataCell extends PureComponent {
   }
 
   handleKey (e) {
+   
     const keyCode = e.which || e.keyCode
     if (keyCode === ESCAPE_KEY) {
       return this.handleRevert()
     }
     const {cell: {component}, forceEdit} = this.props
+    // console.log("Datacell",this.props);
     const eatKeys = forceEdit || !!component
     const commit = keyCode === ENTER_KEY || keyCode === TAB_KEY ||
       (!eatKeys && [LEFT_KEY, RIGHT_KEY, UP_KEY, DOWN_KEY].includes(keyCode))
-
     if (commit) {
       this.handleCommit(this.state.value, e)
     }
@@ -164,7 +173,7 @@ export default class DataCell extends PureComponent {
     const {row, col, cell, cellRenderer: CellRenderer,
       valueRenderer, dataEditor, valueViewer, attributesRenderer,
       selected, editing, onKeyUp} = this.props
-    const {updated} = this.state
+    // const {updated} = this.state
 
     const content = this.renderComponent(editing, cell) ||
         this.renderEditor(editing, cell, row, col, dataEditor) ||
@@ -176,7 +185,7 @@ export default class DataCell extends PureComponent {
       selected && 'selected',
       editing && 'editing',
       cell.readOnly && 'read-only',
-      updated && 'updated'
+      // updated && 'updated'
     ].filter(a => a).join(' ')
 
     return (
@@ -186,13 +195,14 @@ export default class DataCell extends PureComponent {
         cell={cell}
         selected={selected}
         editing={editing}
-        updated={updated}
+        // updated={updated}
         attributesRenderer={attributesRenderer}
         className={className}
         style={widthStyle(cell)}
         onMouseDown={this.handleMouseDown}
         onMouseOver={this.handleMouseOver}
         onDoubleClick={this.handleDoubleClick}
+        onClick = {this.handleClick}
         onContextMenu={this.handleContextMenu}
         onKeyUp={onKeyUp}
         >
@@ -222,6 +232,7 @@ DataCell.propTypes = {
   onDoubleClick: PropTypes.func.isRequired,
   onContextMenu: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   onRevert: PropTypes.func.isRequired
 }
 
