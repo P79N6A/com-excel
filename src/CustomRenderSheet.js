@@ -53,7 +53,7 @@ const RowRenderer = (props) => {
 							cursor: 'pointer'
 						}}
 					>
-						delete
+						<span className="iconfont icon-shanchu" />
 					</span>
 				) : null}
 			</td>
@@ -166,7 +166,7 @@ class CustomRenderSheet extends PureComponent {
 		console.log(grid);
 	}
 
-  // 表格头部
+	// 表格头部
 	renderSheet(props) {
 		return <SheetRenderer columns={this.state.columns} onColumnDrop={this.handleColumnDrop} {...props} />; //表格头部
 	}

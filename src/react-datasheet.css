@@ -50,7 +50,7 @@ span.data-grid-container, span.data-grid-container:focus {
   border: 2px solid rgb(33, 133, 208);
   text-align:right;
   width: calc(100% - 6px);
-  height: 11px;
+  height: 16px;
   background: none;
   display: block;
 }
