@@ -300,17 +300,18 @@ export default class DataSheet extends PureComponent {
         this.clearSelectedCells(start, end)
       } else if (currentCell && !currentCell.readOnly) {
         if (enterKeyPressed) {
-          if (end.i + 1 === this.props.data.length) {
-           this.props.addrow()
-           this.setState({
+          this.setState({
             spanIndex:start.i+1
           })
+          if (end.i + 1 === this.props.data.length) {
+           this.props.addrow()
+         
           //  this._setState({editing: {i:start.i,j:end.j}, clear: {}, forceEdit: true})
            this._setState({selecting: false, start: {i:start.i+1,j:start.j}, end: {i:end.i+1,j:end.j}, editing: editing, forceEdit: false})
           } 
           else {
-            this._setState({editing: start, clear: {}, forceEdit: true})
-     
+            // this._setState({editing: start, clear: {}, forceEdit: true})
+            this._setState({selecting: false, start: {i:start.i+1,j:start.j}, end: {i:end.i+1,j:end.j}, editing: editing, forceEdit: false})
           }
           e.preventDefault()
         } else if (numbersPressed ||
@@ -416,16 +417,20 @@ export default class DataSheet extends PureComponent {
   }
 
   onDoubleClick (i, j) {
-   
      clearTimeout(this.timer);
      this.prevent = true;
      console.log("doubleclick");
+     this.props.checkSelect(i,j)
     let cell = this.props.data[i][j]
     if (!cell.readOnly) {
       this._setState({editing: {i: i, j: j}, forceEdit: true, clear: {}})
     }
   }
   onClick(i,j){
+    // if(Object.keys(this.props.data[i][j]).indexOf("dataEditor") >-1||Object.keys(this.props.data[i][j]).indexOf("select")){
+     
+     
+    // }
     this.timer = setTimeout(() => {
       if (!this.prevent) {
        console.log("click");

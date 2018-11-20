@@ -109,8 +109,7 @@ class CustomRenderSheet extends PureComponent {
         { label: 'Rating', width: '25%' }
       ],
       grid: [
-        [{ name: '',value:""}, { name: '',value:""}, { name: '',value:"" }, { nn: '111', dataEditor: SelectEditor }], 
-        [{ name: '',value:""}, { name: '',value:""}, { name: '',value:""}, { nn: '111', dataEditor: SelectEditor }] 
+        [{ name: '',value:""}, { name: '',value:""}, { name: '',value:"" }, { name: '', dataEditor: SelectEditor }], 
       ]
       // .map((a, i) => a.map((cell, j) => Object.assign(cell, {key: `${i}-${j}`})))
 
@@ -164,22 +163,18 @@ class CustomRenderSheet extends PureComponent {
   }
   //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
   checkDataType (i,j){
-    console.log(i,j) 
     const { grid } = this.state  
-    const select = Object.keys(grid[i][j]).indexOf("dataEditor") === 1 ? true : false
+    const select = Object.keys(grid[i][j]).indexOf("dataEditor") >-1 ? true : false
     if(select){
-      console.log(grid[i][j]);
-      grid[i][j] = {name:"",value:""}
+      grid[i][j] = {name:"",value:"",select:""}
     }
   }
   //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
   checkDataTypeSelect (i,j){
-    console.log(i,j) 
     const { grid } = this.state  
-    const select = Object.keys(grid[i][j]).indexOf("dataEditor") === 1 ? true : false
+    const select = Object.keys(grid[i][j]).indexOf("select") >-1 ? true : false
     if(select){
-      console.log(grid[i][j]);
-      grid[i][j] = {name:"",value:""}
+      grid[i][j] = {name:"",value:"",dataEditor:SelectEditor}
     }
   }
   delete(i){
@@ -204,6 +199,7 @@ class CustomRenderSheet extends PureComponent {
           data={grid}
           addrow = {this.addrow.bind(this)}
           checktype = {this.checkDataType.bind(this)}
+          checkSelect = {this.checkDataTypeSelect.bind(this)}
           valueRenderer={(cell) => cell.value}
           sheetRenderer={this.renderSheet}
           rowRenderer={this.renderRow}
