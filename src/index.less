@@ -1,8 +1,9 @@
 .data-grid-container{
     font-size: 14px;
     .data-grid{
-        th,td{
-            height: 30px!important;
+        width: 1000px;
+        tr,th,td{
+            height: 30px;
             box-sizing: border-box;
         }
         td{
@@ -14,6 +15,68 @@
                 padding-left: 10px;
             }
         }
+        tbody{
+            tr{
+                position: relative;
+                .icon-delete{
+                    position: absolute;
+    
+                }
+            }
+            tr:nth-of-type(even){
+                td{
+                    background-color: #f0f2f5;
+                }
+
+            }
+            tr:nth-of-type(odd){
+                td{
+                    background-color: #fff;
+                }
+            }
+        }
+
+        .delete-td{
+            display: inline-block;
+            width: 50px;
+            background-color: transparent !important; 
+        }
+
+        .css-10nd86i, .css-vj8t7z, .css-1hwfws3, .css-1wy0on6{
+            height: 30px;
+        }
+
+        // 动态生成的 class ，这是个巨坑
+        .css-2o5izw{
+            min-height: 30px;
+            max-height: 30px;
+            height: 30px;
+        }
+        .css-15k3avv{
+            margin: 0;
+        }
+
+        .css-vj8t7z{
+            min-height: 30px;
+            max-height: 30px;
+            height: 30px;
+            border-radius: 0;
+        }
+
+        .css-d8oujb{
+            height: 20px;
+            min-height: 20px;
+            max-height: 20px;
+            margin: 5px 0;
+            overflow: hidden;
+        }
+
+        .css-1ep9fjw{
+            padding: 5px 8px;
+            overflow: hidden;
+        }
+
+
         .cell{
             box-sizing: border-box;
             vertical-align: middle!important;
@@ -26,3 +89,4 @@
         }
     }
 }
+
