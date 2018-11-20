@@ -6,7 +6,6 @@ import Cell from './Cell'
 import DataCell from './DataCell'
 import DataEditor from './DataEditor'
 import ValueViewer from './ValueViewer'
-import Select from 'react-select'
 import { TAB_KEY, ENTER_KEY, DELETE_KEY, ESCAPE_KEY, BACKSPACE_KEY,
   LEFT_KEY, UP_KEY, DOWN_KEY, RIGHT_KEY } from './keys'
 
@@ -65,6 +64,7 @@ export default class DataSheet extends PureComponent {
     this.delay = 200;
     this.prevent = false;
     this.removeAllListeners = this.removeAllListeners.bind(this)
+    console.log(this.prevent,"this.prevent")
   }
   removeAllListeners () {
     document.removeEventListener('mousedown', this.pageClick)
@@ -429,7 +429,6 @@ export default class DataSheet extends PureComponent {
     this.timer = setTimeout(() => {
       if (!this.prevent) {
        console.log("click");
-       console.log(i);
        this.props.checktype(i,this.props.data)
       }
       this.prevent = false;
@@ -441,19 +440,6 @@ export default class DataSheet extends PureComponent {
     this.setState({
       spanIndex:i
     })
-    // this.props.checktype(this.props.data)
-  //  const span = document.documentElement.getElementsByClassName(`span${i}`)[0] 
-  //   span.style.display = "block"
-  //  tr.append("111")
-    // console.log(this.props.data[i][j])
-    // if (j + 1 === this.props.columnslenth) {
-    //   if (this.props.data.lengh === 1) {
-    //     console.log("最后一行不允许删除")
-    //   } else {
-    //     this.props.deletesheet(i)
-    //   }
-
-    // }
     let editing = (isEmpty(this.state.editing) || this.state.editing.i !== i || this.state.editing.j !== j)
       ? {} : this.state.editing
     this._setState({selecting: true, start: {i, j}, end: {i, j}, editing: editing, forceEdit: false})
