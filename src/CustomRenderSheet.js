@@ -74,47 +74,19 @@ const FillViewer = (props) => {
 };
 
 class CustomRenderSheet extends PureComponent {
-	constructor(props) {
-		super(props);
-		this.state = {
-			columns: [
-				{ label: 'Style', width: '25%' },
-				{ label: 'IBUs', width: '25%' },
-				{ label: 'Color (SRM)', width: '25%' },
-				{ label: 'Rating', width: '25%' }
-			],
-			grid: [
-				[
-					{ name: '', value: '' },
-					{ name: '', value: '' },
-					{ name: '', value: '' },
-					{ nn: '111', dataEditor: SelectEditor }
-				],
-				[
-					{ name: '', value: '' },
-					{ name: '', value: '' },
-					{ name: '', value: '' },
-					{ nn: '111', dataEditor: SelectEditor }
-				]
-			]
-		};
-
-		this.handleColumnDrop = this.handleColumnDrop.bind(this);
-		this.handleRowDrop = this.handleRowDrop.bind(this);
-		this.handleChanges = this.handleChanges.bind(this);
-		this.renderSheet = this.renderSheet.bind(this);
-		this.renderRow = this.renderRow.bind(this);
-	}
-	handleColumnDrop(from, to) {
-		const columns = [ ...this.state.columns ];
-		columns.splice(to, 0, ...columns.splice(from, 1));
-		const grid = this.state.grid.map((r) => {
-			const row = [ ...r ];
-			row.splice(to, 0, ...row.splice(from, 1));
-			return row;
-		});
-		this.setState({ columns, grid });
-	}
+  constructor (props) {
+    super(props)
+    this.state = {
+      columns: [
+        { label: 'Style', width: '25%' },
+        { label: 'IBUs', width: '25%' },
+        { label: 'Color (SRM)', width: '25%' },
+        { label: 'Rating', width: '25%' }
+      ],
+      grid: [
+        [{ name: '',value:""}, { name: '',value:""}, { name: '',value:"" }, { name: '', dataEditor: SelectEditor }], 
+      ]
+      // .map((a, i) => a.map((cell, j) => Object.assign(cell, {key: `${i}-${j}`})))
 
 	handleRowDrop(from, to) {
 		const grid = [ ...this.state.grid ];
@@ -166,10 +138,52 @@ class CustomRenderSheet extends PureComponent {
 		console.log(grid);
 	}
 
-	// 表格头部
-	renderSheet(props) {
-		return <SheetRenderer columns={this.state.columns} onColumnDrop={this.handleColumnDrop} {...props} />; //表格头部
-	}
+  handleChanges (changes) {
+    console.log('handleChanges', changes);
+    const grid = this.state.grid.map(row => [...row])
+    changes.forEach(({cell, row, col, value}) => {
+      if (grid[row] && grid[row][col]) {
+        grid[row][col] = {...grid[row][col], value}
+      }
+    })
+    this.setState({grid})
+  }
+  //增加一行
+  addrow (){
+    const { grid } =  this.state;
+    const newData =  [
+    { value: ''}, 
+    { value: ''}, 
+    { value: ''},
+     { value: '', dataEditor: SelectEditor }];
+     this.setState({
+      grid:[...grid,newData]
+     })
+  }
+  //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
+  checkDataType (i,j){
+    const { grid } = this.state  
+    const select = Object.keys(grid[i][j]).indexOf("dataEditor") >-1 ? true : false
+    if(select){
+      grid[i][j] = {name:"",value:"",select:""}
+    }
+  }
+  //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
+  checkDataTypeSelect (i,j){
+    const { grid } = this.state  
+    const select = Object.keys(grid[i][j]).indexOf("select") >-1 ? true : false
+    if(select){
+      grid[i][j] = {name:"",value:"",dataEditor:SelectEditor}
+    }
+  }
+  delete(i){
+    const {grid} = this.state
+    grid.splice(i,1)
+    console.log(grid);
+  }
+  renderSheet (props) {
+    return <SheetRenderer columns={this.state.columns} onColumnDrop={this.handleColumnDrop} {...props} />//表格头部
+  }
 
 	renderRow(props) {
 		const { row, cells, ...rest } = props;
@@ -184,21 +198,26 @@ class CustomRenderSheet extends PureComponent {
 		);
 	}
 
-	render() {
-		const { grid, columns } = this.state;
-		return (
-			<DataSheet
-				data={grid}
-				addrow={this.addrow.bind(this)}
-				checktype={this.checkDataType.bind(this)}
-				valueRenderer={(cell) => cell.value}
-				sheetRenderer={this.renderSheet}
-				rowRenderer={this.renderRow}
-				onCellsChanged={this.handleChanges}
-				columnslenth={columns.length}
-			/>
-		);
-	}
+  render () {
+    const {grid,columns} = this.state
+    return (
+      // <DragDropContextProvider backend={HTML5Backend}>
+        <DataSheet
+          data={grid}
+          addrow = {this.addrow.bind(this)}
+          checktype = {this.checkDataType.bind(this)}
+          checkSelect = {this.checkDataTypeSelect.bind(this)}
+          valueRenderer={(cell) => cell.value}
+          sheetRenderer={this.renderSheet}
+          rowRenderer={this.renderRow}
+          onCellsChanged={this.handleChanges}
+          columnslenth = {columns.length}
+        />
+      // </DragDropContextProvider>
+    
+     
+    )
+  }
 }
 
 export default CustomRenderSheet;
