@@ -3,8 +3,9 @@ import ReactDOM from "react-dom";
 import DataSheet from '../src/index';
 import '../src/react-datasheet.css';
 import SelectEditor from '../src/DataSelect'
-import filedata from './mock'
-
+import {fileData} from './mock'
+let testdata = fileData.dictList.map(dictList => dictList.fieldList.map(item => {return item.fileData}))
+  console.log(testdata)
 const data = [
   [{ name: '',value:"a"}, { name: '',value:"b"},  { name: '', value:"c"},{ name: '', value:"c" }, { name: '',value:"d", dataEditor: SelectEditor }], 
 ];

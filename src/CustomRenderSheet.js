@@ -128,7 +128,7 @@ class CustomRenderSheet extends PureComponent {
     }
   })
      this.setState({
-      grid:[...grid,this.props.adddata]
+      grid:[...grid,[...this.props.adddata]]
      })
   }
   //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
