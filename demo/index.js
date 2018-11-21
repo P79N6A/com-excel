@@ -2,16 +2,11 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import DataSheet from '../src/index';
 import '../src/react-datasheet.css';
-<<<<<<< HEAD
 import SelectEditor from '../src/DataSelect'
 import {fileData} from './mock'
 let testdata = fileData.dictList.map(dictList => dictList.fieldList.map(item => {return item.fileData}))
   console.log(testdata)
-=======
-import SelectEditor from '../src/DataSelect';
-import filedata from './mock';
 
->>>>>>> a5142383926346aa4eefb35d86eb06470478d189
 const data = [
   [
     {name: '', value: 'a'},

@@ -117,19 +117,6 @@ class CustomRenderSheet extends PureComponent {
     this.setState ({grid});
   }
   //增加一行
-<<<<<<< HEAD
-  addrow (){
-    const { grid } =  this.state;
- this.props.adddata.map(item =>{
-    if(Object.keys(item).indexOf("dataEditor")>-1){
-      delete item.dataEditor
-      Object.assign(item, {select: ``})
-    }
-  })
-     this.setState({
-      grid:[...grid,[...this.props.adddata]]
-     })
-=======
   addrow () {
     const {grid} = this.state;
     this.props.adddata.map (item => {
@@ -142,7 +129,6 @@ class CustomRenderSheet extends PureComponent {
       // 使用 ... 解构赋值，避免每一行新增data都指向同一个对象
       grid: [...grid, [...this.props.adddata]],
     });
->>>>>>> a5142383926346aa4eefb35d86eb06470478d189
   }
   //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
   checkDataType (i, j) {
