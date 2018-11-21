@@ -34,7 +34,7 @@ export default  class SelectEditor extends PureComponent {
         <Select
           autoFocus
           openOnFocus
-          closeOnSelect
+          // closeOnSelect
           value={this.props.value}
           onChange={this.handleChange}
           onInputKeyDown={this.handleKeyDown}

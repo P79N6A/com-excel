@@ -330,6 +330,11 @@ export default class DataSheet extends PureComponent {
         }
       }
     }
+    else {
+      this.setState({
+        spanIndex:end.i
+      }) 
+    }
   }
 
   getSelectedCells (data, start, end) {
@@ -433,10 +438,6 @@ export default class DataSheet extends PureComponent {
     }
   }
   onClick(i,j){
-    // if(Object.keys(this.props.data[i][j]).indexOf("dataEditor") >-1||Object.keys(this.props.data[i][j]).indexOf("select")){
-     
-     
-    // }
     this.timer = setTimeout(() => {
       if (!this.prevent) {
        console.log("click");

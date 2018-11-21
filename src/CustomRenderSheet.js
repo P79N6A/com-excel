@@ -101,11 +101,10 @@ class CustomRenderSheet extends PureComponent {
         Object.assign(cell, {select: ``})
       }
     }))
-    console.log(this.state.grid);
   }
   handleRowDrop (from, to) {
     const grid = [ ...this.state.grid ]
-    grid.splice(to, 0, ...grid.splice(from, 1))
+    grid.splice(to, 0, ...grid.splice(from, 1)) 
     this.setState({ grid })
   }
 
@@ -122,13 +121,6 @@ class CustomRenderSheet extends PureComponent {
   //增加一行
   addrow (){
     const { grid } =  this.state;
-    // grid.map((a, i) => a.map((cell, j) => {
-    //   if(Object.keys(cell).indexOf("dataEditor")>-1){
-    //     delete cell.dataEditor
-    //     Object.assign(cell, {select: ``})
-    //   }
-    // }))
-    console.log("addrow",grid);
  this.props.adddata.map(item =>{
     if(Object.keys(item).indexOf("dataEditor")>-1){
       delete item.dataEditor
@@ -143,7 +135,6 @@ class CustomRenderSheet extends PureComponent {
   checkDataType (i,j){
     const { grid } = this.state  
     const select = Object.keys(grid[i][j]).indexOf("dataEditor") >-1 ? true : false
-    console.log(Object.keys(grid[i][j]));
     if(select){
       grid[i][j] = {name:"",value:"",select:""}
     }
@@ -151,13 +142,15 @@ class CustomRenderSheet extends PureComponent {
   //校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
   checkDataTypeSelect (i,j){
     const { grid } = this.state  
-    const select = Object.keys(grid[i][j]).indexOf("select") >-1 ? true : false
-    if(select){
-      grid[i][j] = {name:"",value:"",dataEditor:SelectEditor}
+    if(Object.keys(grid[i][j]).indexOf("select") >-1 ? true : false){
+      // grid[i][j].dataEditor = {name:"2",value:"2",dataEditor:SelectEditor}
+    grid[i].splice(j,1,{name:"2",value:"",dataEditor:SelectEditor})
+    
+   
     }
   }
   delete(i){
-    const {grid} = this.state
+    const {grid} = this.state;
     grid.splice(i,1)
   }
   renderSheet (props) {

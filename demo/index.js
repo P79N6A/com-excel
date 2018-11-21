@@ -3,11 +3,13 @@ import ReactDOM from "react-dom";
 import DataSheet from '../src/index';
 import '../src/react-datasheet.css';
 import SelectEditor from '../src/DataSelect'
+import filedata from './mock'
+
 const data = [
-  [{ name: '',value:"a"}, { name: '',value:"b"},  { name: '', value:"c",dataEditor: SelectEditor }, { name: '',value:"d", dataEditor: SelectEditor }], 
+  [{ name: '',value:"a"}, { name: '',value:"b"},  { name: '', value:"c"},{ name: '', value:"c" }, { name: '',value:"d", dataEditor: SelectEditor }], 
 ];
 const adddata = 
-  [{ name: '',value:"default1"}, { name: '',value:"default2"},   { name: '', value:"",select: "" }, { name: '', value:"default5",select: "" }];
+  [{ name: '',value:""}, { name: '',value:""},   { name: '', value:"" }, { name: '', value:""},{ name: '', value:"",dataEditor: SelectEditor }];
 
 const columns = [
      { label: 'col1', width: '25%' },
