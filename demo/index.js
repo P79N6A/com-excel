@@ -15,7 +15,8 @@ const columns = [
      { label: 'col1', width: '25%' },
    { label: 'col2', width: '25%' },
    { label: 'col3 (SRM)', width: '25%' },
-    { label: 'col4', width: '25%' }
+    { label: 'col4', width: '25%' },
+    { label: 'col5', width: '25%' }
  ];
 const App = () => {
   return (
