@@ -16,7 +16,7 @@ export default  class SelectEditor extends PureComponent {
       }
       const { e } = this.state
       onCommit(opt.value, e)
-      console.log('COMMITTED', opt.value)
+      // console.log('COMMITTED', opt.value)
     }
   
     handleKeyDown (e) {
@@ -39,11 +39,11 @@ export default  class SelectEditor extends PureComponent {
           onChange={this.handleChange}
           onInputKeyDown={this.handleKeyDown}
           options={[
-            {label: '1', value: "1"},
-            {label: '2', value: "2"},
-            {label: '3', value: "3"},
-            {label: '4', value: "4"},
-            {label: '5', value: "5"}
+            {label: '设备1', value: "设备1"},
+            {label: '设备2', value: "设备2"},
+            {label: '设备3', value: "设备3"},
+            {label: '设备4', value: "设备4"},
+            {label: '设备5', value: "设备5"}
           ]}
         />
       )

@@ -14,4 +14,7 @@
   "emmet.triggerExpansionOnTab": true,
   "editor.snippetSuggestions": "top",
   "git.ignoreLimitWarning": true,
+  "files.associations": {
+    "*.js": "javascriptreact"
+  },
 }

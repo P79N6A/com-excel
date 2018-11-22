@@ -12,28 +12,87 @@
                     "fieldData": [
                         {
                             "name": "attribute",
-                            "value": ""
+                            "value": "1"
                         },
                         {
                             "name": "unit",
-                            "value": ""
+                            "value": "2"
                         },
                         {
                             "name": "filterRule",
-                            "value": ""
+                            "value": "3"
                         },
                         {
                             "name": "fieldType",
-                            "value": ""
+                            "value": "4"
                         },
                         {
-                            "name": "sourceField",
-                            "value": ""
+                            "name": "fieldType",
+                            "value": "4"
+                        }
+                    ],
+                },
+                
+                {
+                    "fieldId": "2", 
+                    "fieldData": [
+                        {
+                            "name": "attribute",
+                            "value": "6"
+                        },
+                        {
+                            "name": "unit",
+                            "value": "7"
+                        },
+                        {
+                            "name": "filterRule",
+                            "value": "8"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "9"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "4"
+                        }
+                    ],
+                }
+            ],
+        },
+        {
+            "dictId": "dictId3", //为空
+            "entityId": "entity2",
+            "nodeId": "nodeId2",
+            "bizType": "EQUIPMENT2",
+            "fieldList": [
+                {
+                    "fieldId": "3", //初始化只新建一条
+                    "fieldData": [
+                        {
+                            "name": "attribute",
+                            "value": "1"
+                        },
+                        {
+                            "name": "unit",
+                            "value": "3"
+                        },
+                        {
+                            "name": "filterRule",
+                            "value": "2"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "1"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "4"
                         }
                     ],
                 },
                 {
-                    "fieldId": "2", 
+                    "fieldId": "4", 
                     "fieldData": [
                         {
                             "name": "attribute",
@@ -52,8 +111,67 @@
                             "value": ""
                         },
                         {
+                            "name": "fieldType",
+                            "value": "4"
+                        }
+                    ],
+                }
+            ],
+        },
+        {
+            "dictId": "dictId4", //为空
+            "entityId": "entity2",
+            "nodeId": "nodeId2",
+            "bizType": "EQUIPMENT2",
+            "fieldList": [
+                {
+                    "fieldId": "1", //初始化只新建一条
+                    "fieldData": [
+                        {
+                            "name": "attribute",
+                            "value": "a"
+                        },
+                        {
+                            "name": "unit",
+                            "value": "s"
+                        },
+                        {
+                            "name": "filterRule",
+                            "value": "d"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "f"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "4"
+                        }
+                    ],
+                },
+                {
+                    "fieldId": "2", 
+                    "fieldData": [
+                        {
+                            "name": "attribute",
+                            "value": "h"
+                        },
+                       
+                        {
+                            "name": "filterRule",
+                            "value": "s"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "d"
+                        },
+                        {
                             "name": "sourceField",
-                            "value": ""
+                            "value": "f"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "4"
                         }
                     ],
                 }
@@ -68,50 +186,52 @@
                 {
                     "fieldId": "1", //初始化只新建一条
                     "fieldData": [
-                        {
-                            "name": "attribute",
-                            "value": ""
-                        },
+                       
                         {
                             "name": "unit",
-                            "value": ""
+                            "value": "c"
                         },
                         {
                             "name": "filterRule",
-                            "value": ""
+                            "value": "d"
                         },
                         {
                             "name": "fieldType",
-                            "value": ""
+                            "value": "f"
                         },
                         {
                             "name": "sourceField",
-                            "value": ""
+                            "value": "g"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "4"
                         }
                     ],
                 },
                 {
                     "fieldId": "2", 
                     "fieldData": [
-                        {
-                            "name": "attribute",
-                            "value": ""
-                        },
+                       
                         {
                             "name": "unit",
-                            "value": ""
+                            "value": "g"
                         },
                         {
                             "name": "filterRule",
-                            "value": ""
+                            "value": "h"
                         },
                         {
                             "name": "fieldType",
-                            "value": ""
+                            "value": "i"
                         },
                         {
                             "name": "sourceField",
-                            "value": ""
+                            "value": "o"
+                        },
+                        {
+                            "name": "fieldType",
+                            "value": "4"
                         }
                     ],
                 }
