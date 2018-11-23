@@ -281,6 +281,7 @@ export default class DataSheet extends PureComponent {
     if (e.isPropagationStopped && e.isPropagationStopped()) {
       return;
     }
+
     const keyCode = e.which || e.keyCode;
     const { start, end, editing } = this.getState();
     const isEditing = editing && !isEmpty(editing);
@@ -502,7 +503,7 @@ export default class DataSheet extends PureComponent {
       selecting: true,
       start: { i, j },
       end: { i, j },
-      // editing: editing,
+      editing,
       forceEdit: false
     });
 
@@ -610,7 +611,7 @@ export default class DataSheet extends PureComponent {
                   row={i}
                   col={j}
                   cell={cell}
-                  selectData={this.props.selectData}
+                  // selectData={this.props.selectData}
                   forceEdit={forceEdit}
                   onMouseDown={this.onMouseDown}
                   onMouseOver={this.onMouseOver}

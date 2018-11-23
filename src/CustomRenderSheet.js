@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import SelectEditor from './DataSelect';
 import DataSheet from './DataSheet';
 
 const Header = (props) => {
@@ -186,7 +185,8 @@ class CustomRenderSheet extends PureComponent {
     const { grid } = this.state;
     const oldValue = grid[i][j].value;
     if (Object.keys(grid[i][j]).indexOf('select') > -1) {
-      grid[i][j] = { name: '2', value: oldValue, dataEditor: SelectEditor };
+      grid[i][j] = { name: '2', value: oldValue, dataEditor: 'SelectEditor' };
+      // grid[i][j] = { name: '2', value: oldValue, select: '' };
     }
   }
 
@@ -224,7 +224,7 @@ class CustomRenderSheet extends PureComponent {
     const { grid, columns } = this.state;
     return (
       <DataSheet
-        selectData={this.props.selectData}
+        // selectData={this.props.selectData}
         data={grid}
         addrow={this.addrow.bind(this)}
         checktype={this.checkDataType.bind(this)}

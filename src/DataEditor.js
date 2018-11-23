@@ -1,36 +1,36 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
-import CellShape from './CellShape'
+import CellShape from './CellShape';
 
 export default class DataEditor extends PureComponent {
-  constructor (props) {
-    super(props)
-    this.handleChange = this.handleChange.bind(this)
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount () {
-    this._input.focus()
-    this._input.onblur = (e) =>{
+  componentDidMount() {
+    this._input.focus();
+    this._input.onblur = (e) => {
       // console.log(e,"blur")
-    }
+    };
   }
 
-  handleChange (e) {
-    this.props.onChange(e.target.value)
+  handleChange(e) {
+    this.props.onChange(e.target.value);
   }
 
-  render () {
-    const {value, onKeyDown} = this.props
+  render() {
+    const { value, onKeyDown } = this.props;
     return (
       <input
-        ref={input => { this._input = input }}
-        className='data-editor'
+        ref={(input) => { this._input = input; }}
+        className="data-editor"
         value={value}
         onChange={this.handleChange}
         onKeyDown={onKeyDown}
       />
-    )
+    );
   }
 }
 
@@ -43,4 +43,4 @@ DataEditor.propTypes = {
   onCommit: PropTypes.func.isRequired,
   onRevert: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired
-}
+};

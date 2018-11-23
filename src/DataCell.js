@@ -170,7 +170,17 @@ export default class DataCell extends PureComponent {
   renderEditor(editing, cell, row, col, dataEditor) {
     if (editing) {
       const Editor = cell.dataEditor || dataEditor || DataEditor;
-     
+
+      debugger;
+
+      if (cell.render) {
+        return cell.render({
+          onCommit: this.handleCommit,
+          onChange: this.handleChange,
+          onRevert: this.handleRevert,
+          onKeyDown: this.handleKey
+        });
+      } 
       return (
         <Editor
           cell={cell}
@@ -182,8 +192,7 @@ export default class DataCell extends PureComponent {
           onCommit={this.handleCommit}
           onRevert={this.handleRevert}
           onKeyDown={this.handleKey}
-          
-          selectData={this.props.selectData}
+          // selectData={this.props.selectData}
         />
       );
     }
@@ -227,6 +236,7 @@ export default class DataCell extends PureComponent {
         attributesRenderer={attributesRenderer}
         className={className}
         style={widthStyle(cell)}
+        onFocus={() => 0} // 解决 mouse-events-have-key-events eslint 报错
         onMouseDown={this.handleMouseDown}
         onMouseOver={this.handleMouseOver}
         onDoubleClick={this.handleDoubleClick}
