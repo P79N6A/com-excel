@@ -171,9 +171,9 @@ export default class DataCell extends PureComponent {
     if (editing) {
       const Editor = cell.dataEditor || dataEditor || DataEditor;
 
-      debugger;
+      const { forceEdit } = this.props;
 
-      if (cell.render) {
+      if (cell.render && forceEdit) { // forceEdit，是否触发自定义编辑组件渲染 ？
         return cell.render({
           onCommit: this.handleCommit,
           onChange: this.handleChange,

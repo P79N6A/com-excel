@@ -477,6 +477,8 @@ export default class DataSheet extends PureComponent {
     if (!cell.readOnly) {
       this._setState({ editing: { i, j }, forceEdit: true, clear: {} });
     }
+
+    debugger;
   }
 
   onClick(i, j) {
