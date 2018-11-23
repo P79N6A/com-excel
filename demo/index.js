@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ComExcel from '../src/index';
 import '../src/react-datasheet.css';
 import SelectEditor from './Select';
-import { fileData } from './mock';
+import fileData from './mock';
 import { dictionarySaveData } from './analysisdictionary';
 // 添加行的数据结构第几行是下拉框则添加 dataEditor: SelectEditor的属性
 const adddata = [
@@ -71,7 +71,7 @@ const groupedOptions = [
 ];
 export default class App extends Component {
   // 当增删改查时候与后台进行的数据交互
-  saveDdata(data) {
+  saveDdata = (data) => {
     // console.log(data.shift())
     // dictionarySaveData(data);
     console.log('与后台对接的数据', dictionarySaveData(data));
@@ -130,7 +130,7 @@ export default class App extends Component {
       return (
         <div style={{ margin: 50, width: 0 }} key={dict.dictId}>
           <ComExcel
-            saveDdata={this.saveDdata.bind(this)}
+            saveDdata={this.saveDdata}
             readonly={false}
             adddata={adddata}
             columns={columns}

@@ -9,9 +9,11 @@ export default class SelectEditor extends React.Component {
   }
 
   handleChange = (opt) => {
-    if (this.props.row === 0) {
+    const { row, selectType } = this.props;
+
+    if (row === 0) {
       console.log('我此时请求数据', opt);
-      this.props.selectType(opt.value);
+      selectType(opt.value);
     }
     const { onCommit, onRevert } = this.props;
 

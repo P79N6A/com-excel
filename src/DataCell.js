@@ -43,32 +43,39 @@ export default class DataCell extends PureComponent {
     this.handleClick = this.handleClick.bind(this);
 
     this.state = {
-      updated: false, reverting: false, value: '', committing: false 
+      reverting: false, value: '', committing: false 
     };
   }
 
-  selectType(type) {
+  selectType = (type) => {
     console.log(type, 'selectType');
   }
 
   componentWillReceiveProps(nextProps) {
+    const { editing } = this.props;
+
     if (initialValue(nextProps) !== initialValue(this.props)) {
       // this.setState({updated: true})
-      this.timeout = setTimeout(() => this.setState({ updated: false }), 700);
+      // this.timeout = setTimeout(() => this.setState({ updated: false }), 700);
     }
-    if (nextProps.editing === true && this.props.editing === false) {
+    if (nextProps.editing === true && editing === false) {
       const value = nextProps.clearing ? '' : initialData(nextProps);
       this.setState({ value, reverting: false });
     }
   }
 
   componentDidUpdate(prevProps) {
+    const {
+      editing, onChange, row, col 
+    } = this.props;
+    const { reverting, committing, value } = this.state;
+
     if (prevProps.editing === true
-        && this.props.editing === false
-        && !this.state.reverting
-        && !this.state.committing
-        && this.state.value !== initialData(this.props)) {
-      this.props.onChange(this.props.row, this.props.col, this.state.value);
+        && editing === false
+        && !reverting
+        && !committing
+        && value !== initialData(this.props)) {
+      onChange(row, col, value);
     }
   }
 
@@ -81,10 +88,12 @@ export default class DataCell extends PureComponent {
   }
 
   handleCommit(value, e, opt) {
-    const { onChange, onNavigate } = this.props;
+    const {
+      onChange, onNavigate, row, col 
+    } = this.props;
     if (value !== initialData(this.props)) {
       this.setState({ value, committing: true });
-      onChange(this.props.row, this.props.col, value, opt);
+      onChange(row, col, value, opt);
     } else {
       this.handleRevert();
     }
@@ -95,21 +104,21 @@ export default class DataCell extends PureComponent {
   }
 
   handleRevert() {
+    const { onRevert } = this.props;
     this.setState({ reverting: true });
-    this.props.onRevert();
+    onRevert();
   }
 
-  handleMouseDown(e) {
+  handleMouseDown() {
     const { 
       row, col, onMouseDown, cell 
     } = this.props;
-    // console.log("datacell",this.props);
     if (!cell.disableEvents) {
       onMouseDown(row, col);
     }
   }
 
-  handleMouseOver(e) {
+  handleMouseOver() {
     const {
       row, col, onMouseOver, cell
     } = this.props;
@@ -118,16 +127,16 @@ export default class DataCell extends PureComponent {
     }
   }
 
-  handleDoubleClick(e) {
+  handleDoubleClick() {
     const { 
-      row, col, onDoubleClick, onClick, cell 
+      row, col, onDoubleClick, cell 
     } = this.props;
     if (!cell.disableEvents) {
       onDoubleClick(row, col);
     }
   }
 
-  handleClick(e) {
+  handleClick() {
     const {
       row, col, onClick, cell
     } = this.props;
@@ -151,12 +160,13 @@ export default class DataCell extends PureComponent {
       return this.handleRevert();
     }
     const { cell: { component }, forceEdit } = this.props;
+    const { value } = this.state;
 
     const eatKeys = forceEdit || !!component;
     const commit = keyCode === ENTER_KEY || keyCode === TAB_KEY
       || (!eatKeys && [LEFT_KEY, RIGHT_KEY, UP_KEY, DOWN_KEY].includes(keyCode));
     if (commit) {
-      this.handleCommit(this.state.value, e);
+      this.handleCommit(value, e);
     }
   }
 
@@ -172,6 +182,7 @@ export default class DataCell extends PureComponent {
       const Editor = cell.dataEditor || dataEditor || DataEditor;
 
       const { forceEdit } = this.props;
+      const { value } = this.state;
 
       if (cell.render && forceEdit) { // forceEdit，是否触发自定义编辑组件渲染 ？
         return cell.render({
@@ -185,9 +196,9 @@ export default class DataCell extends PureComponent {
         <Editor
           cell={cell}
           row={row}
-          selectType={this.selectType.bind(this)}
+          selectType={this.selectType}
           col={col}
-          value={this.state.value}
+          value={value}
           onChange={this.handleChange}
           onCommit={this.handleCommit}
           onRevert={this.handleRevert}
@@ -260,7 +271,6 @@ DataCell.propTypes = {
   clearing: PropTypes.bool,
   cellRenderer: PropTypes.func,
   valueRenderer: PropTypes.func.isRequired,
-  dataRenderer: PropTypes.func,
   valueViewer: PropTypes.func,
   dataEditor: PropTypes.func,
   attributesRenderer: PropTypes.func,
@@ -279,5 +289,8 @@ DataCell.defaultProps = {
   selected: false,
   editing: false,
   clearing: false,
-  cellRenderer: Cell
+  cellRenderer: Cell,
+  valueViewer: () => {},
+  dataEditor: () => {},
+  attributesRenderer: () => {},
 };

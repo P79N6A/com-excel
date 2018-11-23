@@ -1,4 +1,4 @@
-import React, { PureComponent, Children } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Sheet from './Sheet';
 import Row from './Row';
@@ -23,7 +23,7 @@ const isEmpty = obj => Object.keys(obj).length === 0; // 判断对象的长度
 const range = (start, end) => {
   const array = [];
   const inc = end - start > 0;
-  for (let i = start; inc ? i <= end : i >= end; inc ? i++ : i--) {
+  for (let i = start; inc ? i <= end : i >= end; inc ? i += 1 : i -= 1) {
     inc ? array.push(i) : array.unshift(i);
   }
   return array;
@@ -56,6 +56,8 @@ export default class DataSheet extends PureComponent {
       this
     );
 
+    const { data } = this.props;
+
     this.defaultState = {
       start: {},
       end: {},
@@ -64,26 +66,13 @@ export default class DataSheet extends PureComponent {
       editing: {},
       clear: {},
       spanIndex: null,
-      grid: this.props.data
+      grid: data
     };
     this.state = this.defaultState;
     this.timer = 0;
     this.delay = 200;
     this.prevent = false;
     this.removeAllListeners = this.removeAllListeners.bind(this);
-    console.log(this.prevent, 'this.prevent');
-  }
-
-  removeAllListeners() {
-    document.removeEventListener('mousedown', this.pageClick);
-    document.removeEventListener('mouseup', this.onMouseUp);
-    document.removeEventListener('copy', this.handleCopy);
-    document.removeEventListener('paste', this.handlePaste);
-  }
-
-  testdelete() {
-    // this.setState(this.defaultState)
-    this._setState(this.defaultState);
   }
 
   componentDidMount() {
@@ -94,15 +83,16 @@ export default class DataSheet extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.log("componentDidUpdate");
     const { start, end } = this.state;
+    const { onSelect } = this.props;
+
     const prevEnd = prevState.end;
     if (
       !isEmpty(end)
       && !(end.i === prevEnd.i && end.j === prevEnd.j)
       && !this.isSelectionControlled()
     ) {
-      this.props.onSelect && this.props.onSelect({ start, end });
+      onSelect && onSelect({ start, end });
     }
   }
 
@@ -112,15 +102,32 @@ export default class DataSheet extends PureComponent {
     this.removeAllListeners();
   }
 
+
+  testdelete = () => {
+    // this.setState(this.defaultState)
+    this._setState(this.defaultState);
+  }
+
+  removeAllListeners() {
+    document.removeEventListener('mousedown', this.pageClick);
+    document.removeEventListener('mouseup', this.onMouseUp);
+    document.removeEventListener('copy', this.handleCopy);
+    document.removeEventListener('paste', this.handlePaste);
+  }
+
+
   isSelectionControlled() {
     return 'selected' in this.props;
     // console.log("isSelectionControlled",this.props);
   }
 
   getState() {
-    let state = this.state;
+    const { selected } = this.props;
+
+    let { state } = this;
+
     if (this.isSelectionControlled()) {
-      let { start, end } = this.props.selected || {};
+      let { start, end } = selected || {};
       start = start || this.defaultState.start;
       end = end || this.defaultState.end;
       state = { ...state, start, end };
@@ -131,9 +138,11 @@ export default class DataSheet extends PureComponent {
 
   _setState(state) {
     if (this.isSelectionControlled() && ('start' in state || 'end' in state)) {
-      let { start, end, ...rest } = state;
-      let { selected, onSelect } = this.props;
-      console.log('_setState', this.props);
+      let { start, end, } = state;
+      const { ...rest } = state;
+      let { selected } = this.props;
+      const { onSelect } = this.props;
+
       selected = selected || {};
       if (!start) {
         start = 'start' in selected ? selected.start : this.defaultState.start;
@@ -157,7 +166,9 @@ export default class DataSheet extends PureComponent {
   }
 
   handleCopy(e) {
-    if (isEmpty(this.state.editing)) {
+    const { editing } = this.state;
+
+    if (isEmpty(editing)) {
       e.preventDefault();
       const { dataRenderer, valueRenderer, data } = this.props;
       const { start, end } = this.getState();
@@ -183,14 +194,17 @@ export default class DataSheet extends PureComponent {
   }
 
   handlePaste(e) {
-    if (isEmpty(this.state.editing)) {
+    const { editing } = this.state;
+    const { parsePaste } = this.props;
+
+    if (isEmpty(editing)) {
       let { start, end } = this.getState();
 
       start = { i: Math.min(start.i, end.i), j: Math.min(start.j, end.j) };
       end = { i: Math.max(start.i, end.i), j: Math.max(start.j, end.j) };
       // console.log("start",start);
       // console.log("start",end);
-      const parse = this.props.parsePaste || defaultParsePaste;
+      const parse = parsePaste || defaultParsePaste;
       const changes = [];
       const pasteData = parse(e.clipboardData.getData('text/plain'));
       // in order of preference
@@ -282,6 +296,8 @@ export default class DataSheet extends PureComponent {
       return;
     }
 
+    const { data, readonly, addrow } = this.props;
+
     const keyCode = e.which || e.keyCode;
     const { start, end, editing } = this.getState();
     const isEditing = editing && !isEmpty(editing);
@@ -293,7 +309,7 @@ export default class DataSheet extends PureComponent {
     const lettersPressed = keyCode >= 65 && keyCode <= 90;
     const latin1Supplement = keyCode >= 160 && keyCode <= 255;
     const numPadKeysPressed = keyCode >= 96 && keyCode <= 105;
-    const currentCell = !noCellsSelected && this.props.data[start.i][start.j];
+    const currentCell = !noCellsSelected && data[start.i][start.j];
     const equationKeysPressed = [
       187 /* equal */,
       189 /* substract */,
@@ -328,10 +344,9 @@ export default class DataSheet extends PureComponent {
           this.setState({
             spanIndex: start.i + 1
           });
-          if (end.i + 1 === this.props.data.length) {
-            if (this.props.readonly) {
-            } else {
-              this.props.addrow();
+          if (end.i + 1 === data.length) {
+            if (!readonly) {
+              addrow();
 
               //  this._setState({editing: {i:start.i,j:end.j}, clear: {}, forceEdit: true})
               this._setState({
@@ -462,27 +477,56 @@ export default class DataSheet extends PureComponent {
     }
   }
 
+
+  isSelected(i, j) {
+    const { start, end } = this.getState();
+    const posX = j >= start.j && j <= end.j;
+    const negX = j <= start.j && j >= end.j;
+    const posY = i >= start.i && i <= end.i;
+    const negY = i <= start.i && i >= end.i;
+
+    return (posX && posY) || (negX && posY) || (negX && negY) || (posX && negY);
+  }
+
+  isEditing(i, j) {
+    const { editing } = this.state;
+    return editing.i === i && editing.j === j;
+  }
+
+  isClearing(i, j) {
+    const { clear } = this.state;
+
+    return clear.i === i && clear.j === j;
+  }
+
   onContextMenu(evt, i, j) {
-    const cell = this.props.data[i][j];
-    if (this.props.onContextMenu) {
-      this.props.onContextMenu(evt, cell, i, j);
+    const { data, onContextMenu } = this.props;
+
+    const cell = data[i][j];
+    if (onContextMenu) {
+      onContextMenu(evt, cell, i, j);
     }
   }
 
+
   onDoubleClick(i, j) {
+    const { checkSelect, data } = this.props;
+
     clearTimeout(this.timer);
     this.prevent = true;
-    this.props.checkSelect(i, j);
-    const cell = this.props.data[i][j];
+    checkSelect(i, j);
+    const cell = data[i][j];
     if (!cell.readOnly) {
       this._setState({ editing: { i, j }, forceEdit: true, clear: {} });
     }
   }
 
   onClick(i, j) {
+    const { checktype } = this.props;
+
     this.timer = setTimeout(() => {
       if (!this.prevent) {
-        this.props.checktype(i, j);
+        checktype(i, j);
       }
       this.prevent = false;
     }, this.delay);
@@ -494,16 +538,19 @@ export default class DataSheet extends PureComponent {
     this.setState({
       spanIndex: i
     });
-    const editing = isEmpty(this.state.editing)
-      || this.state.editing.i !== i
-      || this.state.editing.j !== j
+
+    const { editing } = this.state;
+
+    const editingStatus = isEmpty(editing)
+      || editing.i !== i
+      || editing.j !== j
       ? {}
-      : this.state.editing;
+      : editing;
     this._setState({
       selecting: true,
       start: { i, j },
       end: { i, j },
-      editing,
+      editing: editingStatus,
       forceEdit: false
     });
 
@@ -518,8 +565,9 @@ export default class DataSheet extends PureComponent {
   }
 
   onMouseOver(i, j) {
-    // console.log("mouseover");
-    if (this.state.selecting && isEmpty(this.state.editing)) {
+    const { selecting, editing } = this.state;
+
+    if (selecting && isEmpty(editing)) {
       this._setState({ end: { i, j } });
     }
   }
@@ -546,24 +594,6 @@ export default class DataSheet extends PureComponent {
     this.dgDom && this.dgDom.focus();
   }
 
-  isSelected(i, j) {
-    const { start, end } = this.getState();
-    const posX = j >= start.j && j <= end.j;
-    const negX = j <= start.j && j >= end.j;
-    const posY = i >= start.i && i <= end.i;
-    const negY = i <= start.i && i >= end.i;
-
-    return (posX && posY) || (negX && posY) || (negX && negY) || (posX && negY);
-  }
-
-  isEditing(i, j) {
-    return this.state.editing.i === i && this.state.editing.j === j;
-  }
-
-  isClearing(i, j) {
-    return this.state.clear.i === i && this.state.clear.j === j;
-  }
-
   render() {
     const {
       sheetRenderer: SheetRenderer,
@@ -578,9 +608,10 @@ export default class DataSheet extends PureComponent {
       className,
       overflow,
       data,
-      keyFn
     } = this.props;
-    const { forceEdit } = this.state;
+
+    const { forceEdit, spanIndex } = this.state;
+
     return (
       <span
         ref={(r) => {
@@ -598,10 +629,10 @@ export default class DataSheet extends PureComponent {
         >
           {data.map((row, i) => (
             <RowRenderer
-              key={keyFn ? keyFn(i) : i}
+              key={i}
               readonly={readonly}
-              testdelete={this.testdelete.bind(this)}
-              spanIndex={this.state.spanIndex}
+              testdelete={this.testdelete}
+              spanIndex={spanIndex}
               row={i}
               cells={row}
             >
@@ -613,6 +644,7 @@ export default class DataSheet extends PureComponent {
                   cell={cell}
                   // selectData={this.props.selectData}
                   forceEdit={forceEdit}
+                  onFocus={() => {}}
                   onMouseDown={this.onMouseDown}
                   onMouseOver={this.onMouseOver}
                   onDoubleClick={this.onDoubleClick}
@@ -650,31 +682,40 @@ DataSheet.propTypes = {
   onCellsChanged: PropTypes.func,
   onContextMenu: PropTypes.func,
   onSelect: PropTypes.func,
-  selected: PropTypes.shape({
-    start: PropTypes.shape({
-      i: PropTypes.number,
-      j: PropTypes.number
-    }),
-    end: PropTypes.shape({
-      i: PropTypes.number,
-      j: PropTypes.number
-    })
-  }),
+  // selected: PropTypes.shape({
+  //   start: PropTypes.shape({
+  //     i: PropTypes.number,
+  //     j: PropTypes.number
+  //   }),
+  //   end: PropTypes.shape({
+  //     i: PropTypes.number,
+  //     j: PropTypes.number
+  //   })
+  // }),
   valueRenderer: PropTypes.func.isRequired,
   dataRenderer: PropTypes.func,
-  sheetRenderer: PropTypes.func.isRequired,
-  rowRenderer: PropTypes.func.isRequired,
-  cellRenderer: PropTypes.func.isRequired,
+  sheetRenderer: PropTypes.func,
+  rowRenderer: PropTypes.func,
+  cellRenderer: PropTypes.func,
   valueViewer: PropTypes.func,
   dataEditor: PropTypes.func,
   parsePaste: PropTypes.func,
   attributesRenderer: PropTypes.func,
-  keyFn: PropTypes.func
 };
 DataSheet.defaultProps = {
   sheetRenderer: Sheet,
   rowRenderer: Row,
   cellRenderer: Cell,
   valueViewer: ValueViewer,
-  dataEditor: DataEditor
+  dataEditor: DataEditor,
+  className: '',
+  overflow: 'wrap',
+  // selected: undefined,
+  onChange: () => {},
+  onCellsChanged: () => {},
+  onContextMenu: () => {},
+  onSelect: () => {},
+  dataRenderer: () => {},
+  parsePaste: () => {},
+  attributesRenderer: () => {},
 };

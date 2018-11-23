@@ -13,7 +13,9 @@ const Header = (props) => {
 
 class SheetRenderer extends PureComponent {
   render() {
-    const { className, columns, onColumnDrop } = this.props;
+    const {
+      className, columns, onColumnDrop, children 
+    } = this.props;
     return (
       <table className={className}>
         <thead>
@@ -28,31 +30,33 @@ class SheetRenderer extends PureComponent {
             ))}
           </tr>
         </thead>
-        <tbody>{this.props.children}</tbody>
+        <tbody>{children}</tbody>
       </table>
     );
   }
 }
 
 const RowRenderer = (props) => {
-  const { isOver, children } = props;
+  const {
+    isOver, children, length, readonly, rowIndex, spanIndex
+  } = props;
 
   const className = isOver ? 'drop-target' : '';
   return (
     <tr className={className}>
       {children}
-      {props.length > 1 ? (
+      {length > 1 ? (
         <td className="delete-td">
-          {props.readonly ? null : props.rowIndex === 0 ? null : (
+          {readonly ? null : rowIndex === 0 ? null : (
             <span
               onClick={(event) => {
                 event.stopPropagation();
                 props.delete(props.rowIndex);
                 props.testdelete();
               }}
-              className={`span${props.rowIndex} icon-delete`}
+              className={`span${rowIndex} icon-delete`}
               style={{
-                display: props.spanIndex === props.rowIndex ? 'block' : 'none',
+                display: spanIndex === rowIndex ? 'block' : 'none',
                 cursor: 'pointer',
                 transform: 'translate(5px, 6px)'
               }}
@@ -68,7 +72,7 @@ const RowRenderer = (props) => {
     </tr>
   );
 };
-const data = [
+const defaultData = [
   [
     {
       name: 'attribute',
@@ -95,9 +99,12 @@ const data = [
 class CustomRenderSheet extends PureComponent {
   constructor(props) {
     super(props);
+
+    const { columns, data } = this.props;
+
     this.state = {
-      columns: this.props.columns,
-      grid: this.props.data.length ? this.props.data : data
+      columns,
+      grid: data || defaultData
     };
 
     this.handleColumnDrop = this.handleColumnDrop.bind(this);
@@ -107,19 +114,11 @@ class CustomRenderSheet extends PureComponent {
     this.renderRow = this.renderRow.bind(this);
   }
 
-  handleColumnDrop(from, to) {
-    const columns = [...this.state.columns];
-    columns.splice(to, 0, ...columns.splice(from, 1));
-    const grid = this.state.grid.map((r) => {
-      const row = [...r];
-      row.splice(to, 0, ...row.splice(from, 1));
-      return row;
-    });
-    this.setState({ columns, grid });
-  }
 
   componentDidMount() {
-    this.state.grid.map((a, i) => a.map((cell, j) => {
+    const { grid } = this.state;
+
+    grid.map(a => a.map((cell) => {
       if (Object.keys(cell).indexOf('dataEditor') > -1) {
         delete cell.dataEditor;
         Object.assign(cell, { select: '' });
@@ -127,33 +126,51 @@ class CustomRenderSheet extends PureComponent {
     }));
   }
 
+  handleColumnDrop(from, to) {
+    const { columns, grid } = this.state;
+
+    columns.splice(to, 0, ...columns.splice(from, 1));
+    const newGrid = grid.map((r) => {
+      const row = [...r];
+      row.splice(to, 0, ...row.splice(from, 1));
+      return row;
+    });
+    this.setState({ columns, grid: newGrid });
+  }
+
   handleRowDrop(from, to) {
-    const grid = [...this.state.grid];
+    const { grid } = this.state;
     grid.splice(to, 0, ...grid.splice(from, 1));
     this.setState({ grid });
   }
 
   handleChanges(changes) {
-    const grid = this.state.grid.map(row => [...row]);
+    let { grid } = this.state;
+    grid = grid.map(row => [...row]);
     changes.forEach(({
-      cell, row, col, value 
+      row, col, value 
     }) => {
       if (grid[row] && grid[row][col]) {
         grid[row][col] = { ...grid[row][col], value };
       }
     });
     console.log('changes', changes);
+
+    const { saveDdata } = this.props;
+
     this.setState({ grid }, () => {
       if (changes.length > 0) {
-        changes[0].row ? this.props.saveDdata(this.state.grid) : null;
+        const { grid: newGrid } = this.state;
+        changes[0].row ? saveDdata(newGrid) : null;
       }
     });
   }
 
   // 增加一行
-  addrow() {
+  addrow = () => {
     const { grid } = this.state;
-    this.props.adddata.map((item) => {
+    const { adddata, saveDdata } = this.props;
+    adddata.map((item) => {
       if (Object.keys(item).indexOf('dataEditor') > -1) {
         delete item.dataEditor;
         Object.assign(item, { select: '' });
@@ -162,16 +179,17 @@ class CustomRenderSheet extends PureComponent {
     this.setState(
       {
         // 使用 ... 解构赋值，避免每一行新增data都指向同一个对象
-        grid: [...grid, [...this.props.adddata]]
+        grid: [...grid, [...adddata]]
       },
       () => {
-        this.props.saveDdata(this.state.grid);
+        const { grid: newGrid } = this.state;
+        saveDdata(newGrid);
       }
     );
   }
 
   // 校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
-  checkDataType(i, j) {
+  checkDataType = (i, j) => {
     const { grid } = this.state;
     const select = Object.keys(grid[i][j]).indexOf('dataEditor') > -1;
 
@@ -181,7 +199,7 @@ class CustomRenderSheet extends PureComponent {
   }
 
   // 校验数据格式遇到下拉框单击文本框双击下拉框实现形式改变数据结构
-  checkDataTypeSelect(i, j) {
+  checkDataTypeSelect = (i, j) => {
     const { grid } = this.state;
     const oldValue = grid[i][j].value;
     if (Object.keys(grid[i][j]).indexOf('select') > -1) {
@@ -190,17 +208,20 @@ class CustomRenderSheet extends PureComponent {
     }
   }
 
-  delete(i) {
+  delete = (i) => {
     const { grid } = this.state;
+    const { saveDdata } = this.props;
     grid.splice(i, 1);
     // 通过props的回调函数保存数据数据
-    this.props.saveDdata(grid);
+    saveDdata(grid);
   }
 
   renderSheet(props) {
+    const { columns } = this.state;
+
     return (
       <SheetRenderer
-        columns={this.state.columns}
+        columns={columns}
         onColumnDrop={this.handleColumnDrop}
         {...props}
       />
@@ -208,11 +229,12 @@ class CustomRenderSheet extends PureComponent {
   }
 
   renderRow(props) {
+    const { grid } = this.state;
     const { row, cells, ...rest } = props;
     return (
       <RowRenderer
-        length={this.state.grid.length}
-        delete={this.delete.bind(this)}
+        length={grid.length}
+        delete={this.delete}
         onRowDrop={this.handleRowDrop}
         rowIndex={row}
         {...rest}
@@ -222,19 +244,20 @@ class CustomRenderSheet extends PureComponent {
 
   render() {
     const { grid, columns } = this.state;
+    const { readonly } = this.props;
     return (
       <DataSheet
         // selectData={this.props.selectData}
         data={grid}
-        addrow={this.addrow.bind(this)}
-        checktype={this.checkDataType.bind(this)}
-        checkSelect={this.checkDataTypeSelect.bind(this)}
+        addrow={this.addrow}
+        checktype={this.checkDataType}
+        checkSelect={this.checkDataTypeSelect}
         valueRenderer={cell => cell.value}
         sheetRenderer={this.renderSheet}
         rowRenderer={this.renderRow}
         onCellsChanged={this.handleChanges}
         columnslenth={columns.length}
-        readonly={this.props.readonly}
+        readonly={readonly}
       />
     );
   }

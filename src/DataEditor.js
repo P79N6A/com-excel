@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import CellShape from './CellShape';
-
 export default class DataEditor extends PureComponent {
   constructor(props) {
     super(props);
@@ -11,13 +9,15 @@ export default class DataEditor extends PureComponent {
 
   componentDidMount() {
     this._input.focus();
-    this._input.onblur = (e) => {
+    this._input.onblur = () => {
       // console.log(e,"blur")
     };
   }
 
   handleChange(e) {
-    this.props.onChange(e.target.value);
+    const { onChange } = this.props;
+
+    onChange(e.target.value);
   }
 
   render() {
@@ -36,11 +36,6 @@ export default class DataEditor extends PureComponent {
 
 DataEditor.propTypes = {
   value: PropTypes.node.isRequired,
-  row: PropTypes.number.isRequired,
-  col: PropTypes.number.isRequired,
-  cell: PropTypes.shape(CellShape),
   onChange: PropTypes.func.isRequired,
-  onCommit: PropTypes.func.isRequired,
-  onRevert: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired
 };

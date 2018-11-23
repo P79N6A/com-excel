@@ -39,4 +39,4 @@ const fileData = {
     
 
 };
-export { fileData };
+export default fileData;

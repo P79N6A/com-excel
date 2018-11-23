@@ -7,7 +7,7 @@ export default class Cell extends PureComponent {
   render() {
     const {
       cell, row, col, attributesRenderer,
-      className, style, onMouseDown, onMouseOver, onClick, onDoubleClick, onContextMenu
+      className, style, onMouseDown, onMouseOver, onClick, onDoubleClick, onContextMenu, children
     } = this.props;
 
     const { colSpan, rowSpan } = cell;
@@ -16,6 +16,7 @@ export default class Cell extends PureComponent {
     return (
       <td
         className={className}
+        onFocus={() => {}}
         onMouseDown={onMouseDown}
         onMouseOver={onMouseOver}
         onDoubleClick={onDoubleClick}
@@ -26,7 +27,7 @@ export default class Cell extends PureComponent {
         style={style}
         {...attributes}
       >
-        {this.props.children}
+        {children}
       </td>
     );
   }
@@ -53,5 +54,7 @@ Cell.defaultProps = {
   selected: false,
   editing: false,
   updated: false,
-  attributesRenderer: () => {}
+  attributesRenderer: () => {},
+  className: '',
+  style: {}
 };
