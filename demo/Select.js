@@ -25,16 +25,6 @@ export default class SelectEditor extends React.Component {
     console.log('COMMITTED', opt);
   }
   
-  // handleKeyDown(e) {
-  //   // record last key pressed so we can handle enter
-  //   if (e.which === ENTER_KEY || e.which === TAB_KEY) {
-  //     e.persist();
-  //     this.setState({ e });
-  //   } else {
-  //     this.setState({ e: null });
-  //   }
-  // }
-  
   render() {
     const { options, value } = this.props;
 
