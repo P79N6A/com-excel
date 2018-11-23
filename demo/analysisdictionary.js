@@ -12,5 +12,6 @@ export const dictionarySaveData = (data) => {
       fieldId:a[0].fieldId
     }
   })
+  saveData.shift()
   return saveData
 };

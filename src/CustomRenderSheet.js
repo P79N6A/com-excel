@@ -37,13 +37,14 @@ class SheetRenderer extends PureComponent {
 
 const RowRenderer = props => {
   const { isOver, children } = props;
+
   const className = isOver ? "drop-target" : "";
   return (
     <tr className={className}>
       {children}
       {props.length > 1 ? (
         <td className="delete-td">
-          {props.readonly ? null : (
+          {props.readonly ? null : props.rowIndex === 0 ? null : (
             <span
               onClick={event => {
                 event.stopPropagation();
@@ -67,13 +68,36 @@ const RowRenderer = props => {
     </tr>
   );
 };
-
+const data = [
+  [
+    {
+      name: "attribute",
+      value: ""
+    },
+    {
+      name: "unit",
+      value: ""
+    },
+    {
+      name: "filterRule",
+      value: ""
+    },
+    {
+      name: "fieldType",
+      value: ""
+    },
+    {
+      name: "fieldType",
+      value: ""
+    }
+  ]
+];
 class CustomRenderSheet extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       columns: this.props.columns,
-      grid: this.props.data
+      grid: this.props.data.length ? this.props.data : data
     };
 
     this.handleColumnDrop = this.handleColumnDrop.bind(this);
@@ -115,8 +139,11 @@ class CustomRenderSheet extends PureComponent {
         grid[row][col] = { ...grid[row][col], value };
       }
     });
+    console.log("changes", changes);
     this.setState({ grid }, () => {
-      this.props.saveDdata(this.state.grid);
+      if (changes.length > 0) {
+        changes[0].row ? this.props.saveDdata(this.state.grid) : null;
+      }
     });
   }
   //增加一行
@@ -189,6 +216,7 @@ class CustomRenderSheet extends PureComponent {
     const { grid, columns } = this.state;
     return (
       <DataSheet
+        selectData = {this.props.selectData}
         data={grid}
         addrow={this.addrow.bind(this)}
         checktype={this.checkDataType.bind(this)}

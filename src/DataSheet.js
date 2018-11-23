@@ -481,6 +481,7 @@ export default class DataSheet extends PureComponent {
 
   onMouseDown(i, j) {
     //移动的时候删除icon的位置
+    console.log(this.props,"onmousedown");
     this.setState({
       spanIndex: i
     });
@@ -494,7 +495,7 @@ export default class DataSheet extends PureComponent {
       selecting: true,
       start: { i, j },
       end: { i, j },
-      editing: editing,
+      // editing: editing,
       forceEdit: false
     });
 
@@ -598,6 +599,7 @@ export default class DataSheet extends PureComponent {
                     row={i}
                     col={j}
                     cell={cell}
+                    selectData={this.props.selectData}
                     forceEdit={forceEdit}
                     onMouseDown={this.onMouseDown}
                     onMouseOver={this.onMouseOver}

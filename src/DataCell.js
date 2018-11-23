@@ -38,7 +38,9 @@ export default class DataCell extends PureComponent {
 
     this.state = {updated: false, reverting: false, value: '', committing: false}
   }
-
+  selectType(type){
+    console.log(type,"selectType");
+  }
   componentWillReceiveProps (nextProps) {
     if (initialValue(nextProps) !== initialValue(this.props)) {
       // this.setState({updated: true})
@@ -59,7 +61,6 @@ export default class DataCell extends PureComponent {
       this.props.onChange(this.props.row, this.props.col, this.state.value)
     }
   }
-
   componentWillUnmount () {
     clearTimeout(this.timeout)
   }
@@ -129,7 +130,7 @@ export default class DataCell extends PureComponent {
       return this.handleRevert()
     }
     const {cell: {component}, forceEdit} = this.props
-    // console.log("Datacell",this.props);
+
     const eatKeys = forceEdit || !!component
     const commit = keyCode === ENTER_KEY || keyCode === TAB_KEY ||
       (!eatKeys && [LEFT_KEY, RIGHT_KEY, UP_KEY, DOWN_KEY].includes(keyCode))
@@ -146,18 +147,23 @@ export default class DataCell extends PureComponent {
   }
 
   renderEditor (editing, cell, row, col, dataEditor) {
+    
     if (editing) {
       const Editor = cell.dataEditor || dataEditor || DataEditor
+     
       return (
         <Editor
           cell={cell}
           row={row}
+          selectType = {this.selectType.bind(this)}
           col={col}
           value={this.state.value}
           onChange={this.handleChange}
           onCommit={this.handleCommit}
           onRevert={this.handleRevert}
           onKeyDown={this.handleKey}
+          
+          selectData = {this.props.selectData}
         />
       )
     }
